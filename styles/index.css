@@ -69,6 +69,6 @@ button {
     
 }
 
-#knack-dist_2 .kn-scenes.kn-section {
+.kn-scenes.kn-section .kn-scene .view-group-1, .kn-scenes.kn-section .kn-scene .view-group-2 {
     display: none;
 }
