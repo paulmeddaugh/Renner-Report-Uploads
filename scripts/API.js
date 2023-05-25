@@ -1,5 +1,5 @@
 import axios from 'https://cdn.jsdelivr.net/npm/axios@1.4.0/+esm';
-import { getNextLineIndex } from './utility.js';
+import { getNextLineIndex, updateStatusBarMessage } from './utility.js';
 
 const knackConfig = {
     apiId: '6303cfdae045d500211ad909',
@@ -82,12 +82,12 @@ const API = {
         return employeeMap;
     },
 
-    async uploadAgentInQueueReport(csvText) {
-        return this.uploadReport(csvText, 'Agent In Queue');
+    async uploadAgentInQueueReport(csvText, updateUICallback) {
+        return this.uploadReport(csvText, 'Agent In Queue', updateUICallback);
     },
 
-    async uploadNoteStatisticReport(csvText) {
-        return this.uploadReport(csvText, 'Note Statistic');
+    async uploadNoteStatisticReport(csvText, updateUICallback) {
+        return this.uploadReport(csvText, 'Note Statistic', updateUICallback);
     },
 
     /**
@@ -95,16 +95,16 @@ const API = {
      * 
      * @param {*} csvText 
      */
-    async uploadReport(csvText, type) {
+    async uploadReport(csvText, type, updateUICallback) {
         const headers = csvText.substring(0, getNextLineIndex(csvText, 0) - 1).split(',');
-        console.log(headers);
+        // console.log(headers);
 
         let requestQueue = [], i = 0;
         while ((i = getNextLineIndex(csvText, i)) < csvText.length) {
 
             const nextLineEndIndex = getNextLineIndex(csvText, i);
             const nextLineData = csvText.substring(i, nextLineEndIndex !== csvText.length ? nextLineEndIndex - 1 : nextLineEndIndex).split(',');
-            console.log(nextLineData.join(','));
+            // console.log(nextLineData.join(','));
 
             const newRecordObject = {};
             for (let columnIndex = 0; columnIndex < nextLineData.length; columnIndex++) {
@@ -130,37 +130,18 @@ const API = {
                 newRecordObject[field] = nextLineData[columnIndex];
             }
 
-            // console.log(newRecordObject);
-
             const netlifyType = ({
                 'Agent In Queue': 'CallStatistic',
                 'Note Statistic': 'NoteStatistic',
             })[type];
 
-            // createRecordWithRateLimit('https://api.knack.com/v1/objects/object_29/records', newRecordObject, config);
-            // axios.post(url, newRecordObject, config).then((response) => {
-            //     console.log(response.data)
-            // }).catch((response) => {
-            //     console.log(response);
-            // });
-            // fetch('https://localhost:8888/.netlify/functions/create-record.js').then(response => {
-            //     console.log(response);
-            // });
             requestQueue.push({
                 url: `/.netlify/functions/create-stat-record?type=${netlifyType}`,
                 data: JSON.stringify(newRecordObject)
             });
-            // axios.post(`/.netlify/functions/create-stat-record?type=${netlifyType}`, JSON.stringify(newRecordObject)).then(response => {
-            //     console.log(response);
-            // });
-
-            // not fullproof
-            // if (++recordCount % RATE_LIMIT_DELAY_EVERY === 0) {
-                // await new Promise(resolve => setTimeout(() => resolve(), RATE_LIMIT_DELAY / 4));
-            // } 
         }
 
-        postRequestEvery(requestQueue, RATE_LIMIT_DELAY / RATE_LIMIT_DELAY_EVERY);
+        await postRequestEvery(requestQueue, RATE_LIMIT_DELAY / RATE_LIMIT_DELAY_EVERY, updateUICallback);
     }
 }
 
@@ -186,16 +167,26 @@ function createKnackToFromDateObject(fromDate, toDate) {
 const requestQueue = [];
 let lastSentTime = 0, lastSendId = 0, totalSent = 0;
 
-async function postRequestEvery(requestQueue, spacedMillis) {
-    for (let { url, data } of requestQueue) {
-        axios.post(url, data);
+async function postRequestEvery(requestQueue, spacedMillis, updateUICallback) {
+    return new Promise(async (resolve, reject) => {
+        let i = 0;
+        for (let { url, data } of requestQueue) {
+            updateUICallback(i++, requestQueue.length);
+            axios.post(url, data).then(response => {
+                console.log(response);
+            }).catch(response => {
 
-        await new Promise((resolve) => {
-            setTimeout(() => {
-                resolve();
-            }, spacedMillis);
-        })
-    }
+            });
+
+            await new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve();
+                }, spacedMillis);
+            });
+        }
+
+        resolve();
+    })
 }
 
 async function createRecordWithRateLimit(url, data, config) {

@@ -42,3 +42,17 @@ export function transposeCsv (csv) {
     
     return newCsv;
 }
+
+let statusBar;
+window.addEventListener("load", () => {
+    statusBar = document.getElementById('statusBar');
+    statusBar.innerHTML = '';
+});
+
+export function getStatusBarMessage() {
+    return statusBar.innerHTML;
+}
+
+export function updateStatusBarMessage(message) {
+    statusBar.innerHTML = message;
+}

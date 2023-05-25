@@ -26,6 +26,24 @@ h1 {
     flex: 1;
 }
 
+button {
+    transition: .5s ease;
+    background-color: buttonface;
+    border: 1px solid buttonborder;
+    border-radius: 3px;
+}
+
+.rejectUpload {
+    animation: rejectUpload 1s ease;
+}
+
+@keyframes rejectUpload {
+    0% {
+        border: 1px solid red;
+        background-color: lightcoral;
+    }
+}
+
 .hasFile {
     color: dodgerblue;
 }
@@ -34,6 +52,13 @@ h1 {
     border: 1px solid dodgerblue;
     border-radius: 3px;
     background-color: rgb(169, 209, 249);
+}
+
+#statusBar {
+    margin-top: 44px;
+    color: gray;
+    font-size: 10pt;
+    font: 10pt Helvetica;
 }
 
 #knack-dist_2 {
