@@ -1,45 +1,34 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>Renner Ministries Report Uploads</title>
-<<<<<<< HEAD
-=======
-    <script src="./index.js"></script>
->>>>>>> b193e40 (initial commit)
+    <script type="module" src="./index.js"></script>
+    <!-- <script type="text/javascript">app_id="6303cfdae045d500211ad909";distribution_key="dist_2";</script><script type="text/javascript" src="https://loader.knack.com/6303cfdae045d500211ad909/dist_2/knack.js"></script> -->
+    <link rel="stylesheet" href="./styles/index.css" /> 
   </head>
   <body>
+    <!-- <div id="knack-dist_2">Loading...</div> -->
     <main>
-      <div>
-        <input type="file" id="agentInQueueFile">
-<<<<<<< HEAD
-        <button id="agentInQueueSubmit" type="button">
-      </div>
-      <div>
-        <input type="file" id="noteStatsFile">
-        <button id="noteStatsSubmit" type="button">
-      </div>
-      <div>
-        <input type="file" id="tvStatsFile">
-        <button id="tvStatsSubmit" type="button">
-      </div>
+        <h1 id="pageTitle">Report Uploads</h1>
+        <div id="inputContainer">
+            <div class="statistics">
+                <div class="inputRow">
+                    <input type="file" id="noteStatsFile" class="fileChooser"  accept=".csv,.xlms">
+                    <button id="noteStatsSubmit" type="button">Upload Note Statistic Report</button>
+                </div>
+                <div class="inputRow">
+                    <input type="file" id="agentInQueueFile" class="fileChooser"  accept=".csv,.xlms" />
+                    <button id="agentInQueueSubmit" type="button">Upload Call Statistic Report</button>
+                </div>
+            </div>
+            <div class="inputRow">
+                <input type="file" id="tvStatsFile" class="fileChooser"  accept=".csv,.xlms">
+                <button id="tvStatsSubmit" type="button">Upload TV Program Report</button>
+            </div>
+        </div>
     </main>
   </body>
 </html>
-=======
-        <button id="agentInQueueSubmit" type="button">Upload Call Statistic Reports</button>
-      </div>
-      <div>
-        <input type="file" id="noteStatsFile">
-        <button id="noteStatsSubmit" type="button">Upload Note Statistic Reports</button>
-      </div>
-      <div>
-        <input type="file" id="tvStatsFile">
-        <button id="tvStatsSubmit" type="button">Upload TV Program Reports</button>
-      </div>
-    </main>
-  </body>
-</html>
->>>>>>> b193e40 (initial commit)
