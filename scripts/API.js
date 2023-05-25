@@ -99,7 +99,7 @@ const API = {
         const headers = csvText.substring(0, getNextLineIndex(csvText, 0) - 1).split(',');
         console.log(headers);
 
-        let i = 0;
+        let requestQueue = [], i = 0;
         while ((i = getNextLineIndex(csvText, i)) < csvText.length) {
 
             const nextLineEndIndex = getNextLineIndex(csvText, i);
@@ -130,7 +130,7 @@ const API = {
                 newRecordObject[field] = nextLineData[columnIndex];
             }
 
-            console.log(newRecordObject);
+            // console.log(newRecordObject);
 
             const netlifyType = ({
                 'Agent In Queue': 'CallStatistic',
@@ -146,15 +146,21 @@ const API = {
             // fetch('https://localhost:8888/.netlify/functions/create-record.js').then(response => {
             //     console.log(response);
             // });
-            axios.post(`/.netlify/functions/create-stat-record?type=${netlifyType}`, JSON.stringify(newRecordObject)).then(response => {
-                console.log(response);
+            requestQueue.push({
+                url: `/.netlify/functions/create-stat-record?type=${netlifyType}`,
+                data: JSON.stringify(newRecordObject)
             });
+            // axios.post(`/.netlify/functions/create-stat-record?type=${netlifyType}`, JSON.stringify(newRecordObject)).then(response => {
+            //     console.log(response);
+            // });
 
             // not fullproof
             // if (++recordCount % RATE_LIMIT_DELAY_EVERY === 0) {
-                await new Promise(resolve => setTimeout(() => resolve(), RATE_LIMIT_DELAY / 4));
+                // await new Promise(resolve => setTimeout(() => resolve(), RATE_LIMIT_DELAY / 4));
             // } 
         }
+
+        postRequestEvery(requestQueue, RATE_LIMIT_DELAY / RATE_LIMIT_DELAY_EVERY);
     }
 }
 
@@ -179,6 +185,18 @@ function createKnackToFromDateObject(fromDate, toDate) {
 
 const requestQueue = [];
 let lastSentTime = 0, lastSendId = 0, totalSent = 0;
+
+async function postRequestEvery(requestQueue, spacedMillis) {
+    for (let { url, data } of requestQueue) {
+        axios.post(url, data);
+
+        await new Promise((resolve) => {
+            setTimeout(() => {
+                resolve();
+            }, spacedMillis);
+        })
+    }
+}
 
 async function createRecordWithRateLimit(url, data, config) {
 
