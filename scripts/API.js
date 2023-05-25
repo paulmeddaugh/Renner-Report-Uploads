@@ -116,7 +116,7 @@ const API = {
 
                 if (!field) continue;
 
-                if (header === 'Date') {
+                if (header.includes('Date')) {
                     const toIndexStart = nextLineData[columnIndex].indexOf(' to');
                     const fromDate = new Date(nextLineData[columnIndex].substring(0, toIndexStart));
                     const toDate = new Date(nextLineData[columnIndex].substring(toIndexStart + 4));
@@ -151,9 +151,9 @@ const API = {
             });
 
             // not fullproof
-            if (++recordCount % RATE_LIMIT_DELAY_EVERY === 0) {
-                await new Promise(resolve => setTimeout(() => resolve(), RATE_LIMIT_DELAY));
-            } 
+            // if (++recordCount % RATE_LIMIT_DELAY_EVERY === 0) {
+                await new Promise(resolve => setTimeout(() => resolve(), RATE_LIMIT_DELAY / 4));
+            // } 
         }
     }
 }
