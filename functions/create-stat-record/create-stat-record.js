@@ -35,11 +35,13 @@ const handler = async (event) => {
   })[type];
 
   let knackResponse;
-  fetch(url, { method: 'POST', headers, body: newRecord }).then(async response => {
-    // knackResponse = await response.json();
+  await fetch(url, { method: 'POST', headers, body: newRecord }).then(async response => {
+    knackResponse = await response.json();
+  }).catch(async response => {
+    knackResponse = await response.json();
   });
 
-  return { statusCode: 200, body: knackResponse };
+  return { statusCode: 200, body: JSON.stringify(knackResponse) };
 
   // try {
   //   const subject = event.queryStringParameters.name || 'World'

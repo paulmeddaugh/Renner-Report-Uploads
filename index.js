@@ -1,20 +1,12 @@
 import API from './scripts/API.js';
 import { reformatAgentInQueueReport, reformatNoteStatisticReport } from './scripts/csvReformatting.js';
-import { transposeCsv, updateStatusBarMessage, getStatusBarMessage } from './scripts/utility.js';
+import { transposeCsv, updateStatusBarMessage, getStatusBarMessage, getLogMessage, appendLogMessage } from './scripts/utility.js';
 
 let uploading = false;
 
 window.onload = () => {
 
-    // const headers = {
-    //     'apiId': '6303cfdae045d500211ad909',
-    //     'apiKey': 'd2c92677-fc10-4443-9045-3a04854c5612',
-    //     'Content-Type': 'application/json'
-    // }
-
-    // fetch('https://api.knack.com/v1/objects/object_29/records', { method: 'POST', headers, body: JSON.stringify({ field_318: 11 }) }).then(async response => {
-    //     console.log(await response.json());
-    // });
+    
 
     const agentInQueueChooser = document.getElementById("agentInQueueFile");
     const noteStatsChooser = document.getElementById("noteStatsFile");
@@ -46,7 +38,7 @@ window.onload = () => {
 
             updateStatusBarMessage(`Sending record requests to knack`);
             await API.uploadAgentInQueueReport(formattedContent, (recordIndex, totalRecordsToSend) => {
-                updateStatusBarMessage(`Sending create record request (${recordIndex} of ${totalRecordsToSend})`);
+                uploadStatus(recordIndex, totalRecordsToSend, message);
             });
             uploading = false;
             showFinishedUI(agentInQueueChooser);
@@ -70,13 +62,18 @@ window.onload = () => {
             const formattedContent = reformatNoteStatisticReport(transposedCsv);
 
             updateStatusBarMessage(`Sending record requests to knack`);
-            await API.uploadNoteStatisticReport(formattedContent, (recordIndex, totalRecordsToSend) => {
-                updateStatusBarMessage(`Sending create record request (${recordIndex} of ${totalRecordsToSend})`);
+            await API.uploadNoteStatisticReport(formattedContent, (recordIndex, totalRecordsToSend, message) => {
+                uploadStatus(recordIndex, totalRecordsToSend, message);
             });
             showFinishedUI(noteStatsChooser);
         }
     }
 };
+
+function uploadStatus(recordIndex, totalRecordsToSend, logMessage) {
+    if (recordIndex && totalRecordsToSend) updateStatusBarMessage(`Sending create record request (${recordIndex} of ${totalRecordsToSend})`);
+    if (logMessage) appendLogMessage(`${logMessage}`);
+}
 
 function uploadInProgress(button) {
     if (uploading) {
@@ -92,7 +89,8 @@ function showFinishedUI(fileChooser) {
     fileChooser.value = "";
     fileChooser.classList.remove('hasFile');
     fileChooser.nextSibling.nextSibling.classList.remove('hasFileBtn');
-    
+
     updateStatusBarMessage('Done!');
+    appendLogMessage('Done!');
     uploading = false;
 }

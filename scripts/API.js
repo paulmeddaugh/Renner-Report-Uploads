@@ -1,5 +1,5 @@
 import axios from 'https://cdn.jsdelivr.net/npm/axios@1.4.0/+esm';
-import { getNextLineIndex, updateStatusBarMessage } from './utility.js';
+import { getNextLineIndex, updateStatusBarMessage, appendLogMessage } from './utility.js';
 
 const knackConfig = {
     apiId: '6303cfdae045d500211ad909',
@@ -31,9 +31,8 @@ const basicHeaders = {
 
 const RATE_LIMIT_DELAY_EVERY = 6; 
 const RATE_LIMIT_DELAY = 3150;
-const REQUEST_BATCH_INITIAL_WAIT = 100;
 
-let recordCount = 0;
+let retryCount = 0;
 
 const API = {
 
@@ -49,7 +48,7 @@ const API = {
             axios.get('https://api.knack.com/v1/objects/object_7/records', config).then((response) => {
                 resolve(response.data.records);
             }).catch((response) => {
-                reject(`${response.data.message}\n${response.data.status}`);
+                reject(`${response.data?.message}\n${response.data?.status}`);
             });
         });
         // View based request, gets max of 1_000 employees
@@ -141,13 +140,79 @@ const API = {
             });
         }
 
-        await postRequestEvery(requestQueue, RATE_LIMIT_DELAY / RATE_LIMIT_DELAY_EVERY, updateUICallback);
+        await postRequests(requestQueue, RATE_LIMIT_DELAY / RATE_LIMIT_DELAY_EVERY, updateUICallback);
+
+        async function postRequests(requestQueue, spacedMillis, updateUICallback) {
+            await postRequestEvery(requestQueue, spacedMillis, updateUICallback).catch((failedRequests) => {
+                console.log(1);
+                appendLogMessage(`<button type='button' id='retryRequests-${retryCount}'>Retry Failed Requests</button>`);
+                setTimeout(() => {
+                    document.getElementById(`retryRequests-${retryCount++}`).addEventListener("click", async () => {
+                        console.log(2);
+                        await postRequests(failedRequests, spacedMillis, updateUICallback);
+                    });
+                }, 0);
+            });
+        }
     }
 }
 
 window.addEventListener("load", async () => {
     API.employeeIdMap = await API.getAllEmployeeIds();
 });
+
+async function postRequestEvery(requestQueue, spacedMillis, updateUICallback) {
+    return new Promise(async (resolve, reject) => {
+        let i = 0, batchFailedRequests, failedRequests = [];
+        
+        do {
+            [requestQueue, batchFailedRequests] = await postRequestListWithDelay(requestQueue, spacedMillis, updateUICallback);
+            failedRequests = failedRequests.concat(batchFailedRequests);
+        } while (requestQueue.length !== 0)
+
+        /**
+         * Sends all requests every spacedMillis, and calls the updateUICallback for every request sent. 
+         * Aditionally returns a list of all the requests that failed.
+         * 
+         * @param {*} requestList An array of objects with 'url' and 'data' objects to send as http requests.
+         * @returns a list of all the requests that failed.
+         */
+        async function postRequestListWithDelay(requestList) {
+            let resendRequests = [], failed = [];
+            const REQUESTS_COUNT = requestList.length;
+
+            for (let { url, data } of requestList) {
+                const sendIndex = ++i;
+
+                updateUICallback(sendIndex, requestQueue.length);
+                axios.post(url, data).then(response => {
+                    updateUICallback(null, null, `Record request (${sendIndex} of ${REQUESTS_COUNT}) successful.`);
+                }).catch(response => {
+                    if (response.status === 429 || response.status === 128) { // Rate limit or a strange permissions error
+                        resendRequests.push({ url, data });
+                    } else {
+                        updateUICallback(null, null, `Could not send record request (${sendIndex} of ${REQUESTS_COUNT}): ${response.message}`);
+                        failed.push({ url, data });
+                    }
+                });
+    
+                await new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve();
+                    }, spacedMillis);
+                });
+            }
+
+            return [resendRequests, failed];
+        }
+
+        if (!failedRequests.length) {
+            resolve();
+        } else {
+            reject(failedRequests);
+        }
+    })
+}
 
 function createKnackToFromDateObject(fromDate, toDate) {
     return {
@@ -161,97 +226,6 @@ function createKnackToFromDateObject(fromDate, toDate) {
             "minutes": Number(toDate.getMinutes()),
             "am_pm": toDate.toLocaleString(undefined, { minutes:'2-digit' }).slice(-2).toLowerCase(),
         }
-    }
-}
-
-const requestQueue = [];
-let lastSentTime = 0, lastSendId = 0, totalSent = 0;
-
-async function postRequestEvery(requestQueue, spacedMillis, updateUICallback) {
-    return new Promise(async (resolve, reject) => {
-        let i = 0;
-        for (let { url, data } of requestQueue) {
-            updateUICallback(i++, requestQueue.length);
-            axios.post(url, data).then(response => {
-                console.log(response);
-            }).catch(response => {
-
-            });
-
-            await new Promise((resolve) => {
-                setTimeout(() => {
-                    resolve();
-                }, spacedMillis);
-            });
-        }
-
-        resolve();
-    })
-}
-
-async function createRecordWithRateLimit(url, data, config) {
-
-    requestQueue.push({ url, data, config });
-    this.sendId = totalSent++;
-    const timeSinceLastRequest = -(lastSentTime - Date.now());
-    // console.log(timeSinceLastRequest);
-
-    await new Promise(resolve => {
-        if (timeSinceLastRequest > RATE_LIMIT_DELAY + 150) {
-            setTimeout(() => {
-                resolve();
-                console.log('initial waited');
-                send();
-            }, REQUEST_BATCH_INITIAL_WAIT);
-        } else {
-            resolve();
-        }
-    });
-
-    function send() {
-        console.log(requestQueue.length)
-        if (this.sendId % RATE_LIMIT_DELAY_EVERY === 0 || 
-            (requestQueue.length / RATE_LIMIT_DELAY_EVERY < 0 && id === requestQueue.length)) {
-                console.log(2);
-            
-            console.log((timeSinceLastRequest < RATE_LIMIT_DELAY ? timeSinceLastRequest : 0) + Math.floor(requestQueue.length / RATE_LIMIT_DELAY_EVERY) * RATE_LIMIT_DELAY);
-            setTimeout(() => {
-                
-                sendRequestQueue(requestQueue);
-                lastSentTime = Date.now();
-                console.log('sending batch');
-            }, (timeSinceLastRequest < RATE_LIMIT_DELAY ? timeSinceLastRequest : 0) + Math.floor(requestQueue.length / RATE_LIMIT_DELAY_EVERY) * RATE_LIMIT_DELAY);
-            
-        }
-    }
-    
-    // return new Promise((resolve, reject) => {
-    //     axios.post(url, data, config).then((response) => {
-    //         console.log(response.data);
-    //         resolve(response.data);
-    //     }).catch(async (response) => {
-    //         if (response.status === 429) {
-    //             return createRecordWithRateLimit(url, data, config);
-    //         } else {
-    //             reject(response);
-    //         }
-    //     });
-    // });
-}
-
-/**
- * Sends requests in batches of RATE_LIMIT_DELAY_EVERY or less.
- */
-function sendRequestQueue(requestQueue) {
-    for (let i = 0; i < Math.min(requestQueue.length, RATE_LIMIT_DELAY_EVERY); i++) {
-        const { url, data, config } = requestQueue.shift();
-
-        console.log('request');
-        // axios.post(url, data, config).then((response) => {
-        //     console.log(response.data);
-        // }).catch((response) => {
-        //     console.log(response.data);
-        // });
     }
 }
 

@@ -43,10 +43,12 @@ export function transposeCsv (csv) {
     return newCsv;
 }
 
-let statusBar;
+let statusBar, log;
 window.addEventListener("load", () => {
     statusBar = document.getElementById('statusBar');
-    statusBar.innerHTML = '';
+    statusBar.innerHTML = ' ';
+    log = document.getElementById('log');
+    log.innerHTML = ' ';
 });
 
 export function getStatusBarMessage() {
@@ -55,4 +57,17 @@ export function getStatusBarMessage() {
 
 export function updateStatusBarMessage(message) {
     statusBar.innerHTML = message;
+}
+
+export function getLogMessage() {
+    return log.innerHTML;
+}
+
+export function appendLogMessage(message) {
+    log.innerHTML = log.innerHTML + '<br />' + message;
+    log.scrollTop = log.scrollHeight;
+}
+
+export function updateLogMessage(message) {
+    log.innerHTML = message;
 }
