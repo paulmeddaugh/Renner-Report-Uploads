@@ -1,17 +1,18 @@
 import API from './scripts/API.js';
 import { reformatAgentInQueueReport, reformatNoteStatisticReport } from './scripts/csvReformatting.js';
-import { transposeCsv, updateStatusBarMessage, getStatusBarMessage, getLogMessage, appendLogMessage } from './scripts/utility.js';
+import { transposeCsv, updateStatusBarMessage, getStatusBarMessage, getLogMessage, appendLogMessage, appendLogElement } from './scripts/utility.js';
+// import * as XLSX from "xlsx";
 
 let uploading = false;
 
 window.onload = () => {
 
-    
-
     const agentInQueueChooser = document.getElementById("agentInQueueFile");
     const noteStatsChooser = document.getElementById("noteStatsFile");
+    const totalStatsChooser = document.getElementById("totalStatsFile");
 
-    agentInQueueChooser.onchange = noteStatsChooser.onchange = (e) => {
+    // UI color changing
+    agentInQueueChooser.onchange = noteStatsChooser.onchange = totalStatsChooser.onchange = (e) => {
         if (e.target.value) {
             e.target.classList.add('hasFile');
             e.target.nextSibling.nextSibling.classList.add('hasFileBtn');
@@ -37,7 +38,7 @@ window.onload = () => {
             const formattedContent = reformatAgentInQueueReport(csvText);
 
             updateStatusBarMessage(`Sending record requests to knack`);
-            await API.uploadAgentInQueueReport(formattedContent, (recordIndex, totalRecordsToSend) => {
+            await API.uploadAgentInQueueReport(formattedContent, (recordIndex, totalRecordsToSend, message) => {
                 uploadStatus(recordIndex, totalRecordsToSend, message);
             });
             uploading = false;
@@ -68,6 +69,29 @@ window.onload = () => {
             showFinishedUI(noteStatsChooser);
         }
     }
+
+    document.getElementById('totalStatsSubmit').onclick = async (e) => {
+
+        if (uploadInProgress(e.target)) return;
+
+        if (totalStatsChooser.files.length === 0) {
+            updateStatusBarMessage("No Total Statistic report chosen.");
+        }
+
+        for (let file of totalStatsChooser.files) {
+            
+            uploading = true;
+            updateStatusBarMessage(`Reformatting ${file.name}`);
+
+            readXlsxFile(file).then(async (data) => {
+                await API.uploadTotalInteractionReport(data, file.name, (recordIndex, totalRecordsToSend, message) => {
+                    uploadStatus(recordIndex, totalRecordsToSend, message);
+                });
+                showFinishedUI(totalStatsChooser);
+            })
+        }
+    }
+
 };
 
 function uploadStatus(recordIndex, totalRecordsToSend, logMessage) {

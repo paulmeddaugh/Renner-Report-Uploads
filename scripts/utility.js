@@ -68,6 +68,11 @@ export function appendLogMessage(message) {
     log.scrollTop = log.scrollHeight;
 }
 
+export function appendLogElement(element) {
+    log.innerHTML = log.innerHTML + '<br />';
+    if (element instanceof Element) log.appendChild(element);
+}
+
 export function updateLogMessage(message) {
     log.innerHTML = message;
 }

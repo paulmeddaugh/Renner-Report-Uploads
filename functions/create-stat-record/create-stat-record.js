@@ -10,7 +10,7 @@ const basicHeaders = {
   'X-Knack-REST-API-Key': knackConfig.apiKey,
 }
 
-//localhost:8888/.netlify/functions/create-record.js
+//localhost:8888/.netlify/functions/create-stat-record
 const handler = async (event) => {
 
   if (event.httpMethod !== 'POST') {
@@ -32,13 +32,14 @@ const handler = async (event) => {
   const url = ({
     'CallStatistic': 'https://api.knack.com/v1/objects/object_29/records',
     'NoteStatistic': 'https://api.knack.com/v1/objects/object_23/records',
+    'TotalInteractionStatistic': 'https://api.knack.com/v1/objects/object_32/records'
   })[type];
 
   let knackResponse;
   await fetch(url, { method: 'POST', headers, body: newRecord }).then(async response => {
-    knackResponse = await response.json();
+    knackResponse = await response?.json();
   }).catch(async response => {
-    knackResponse = await response.json();
+    knackResponse = await response?.json();
   });
 
   return { statusCode: 200, body: JSON.stringify(knackResponse) };
