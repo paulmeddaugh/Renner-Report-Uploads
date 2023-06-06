@@ -1,5 +1,5 @@
 import axios from 'https://cdn.jsdelivr.net/npm/axios@1.4.0/+esm';
-import { getNextLineIndex, updateStatusBarMessage, appendLogMessage, appendLogElement } from './utility.js';
+import { getNextLineIndex, updateStatusBarMessage, appendLogMessage, appendLogElement, getKnackDateString } from './utility.js';
 
 const agentInQueueFields = {
     "Agent Extension": "field_318",
@@ -17,23 +17,25 @@ const agentInQueueFields = {
     "Date": "field_330",
 }
 
-// Maps to Total Interaction Statistic Report categories and subcategories, not actual names in knack
+const noteStatFields = { '3CX Username': 'field_218', 'Inbound Call - Finance': 'field_219','Inbound Call - Free Offer': 'field_220','Inbound Call - Material Request': 'field_221','Inbound Call - Ministry Expansion': 'field_222','Inbound Call - Order/Donation': 'field_223','Inbound Call - Other': 'field_224','Inbound Call - Praise Report': 'field_225','Inbound Call - Prayer': 'field_226','Inbound Call - Prayer for Infilling of HS': 'field_227','Inbound Call - Prayer for Salvation': 'field_228','Inbound Email - Free Offer': 'field_229','Inbound Email - Order Fulfillment': 'field_230','Inbound Email - Other': 'field_231','Inbound Email - Prayer': 'field_232','Inbound Email - prayer@deniserenner.org': 'field_233','Outbound Call - Call from a Letter': 'field_244','Outbound Call - Death in Family': 'field_245','Outbound Call - Disaster': 'field_246','Outbound Call - Faithful': 'field_247','Outbound Call - Finance': 'field_248','Outbound Call - Follow-up': 'field_249','Outbound Call - Free Offer': 'field_250','Outbound Call - Holiday': 'field_251','Outbound Call - Lapsed': 'field_252','Outbound Call - Large Donor': 'field_253','Outbound Call - Meeting New Name': 'field_254','Outbound Call - Ministry Expansion': 'field_255','Outbound Call - New Donor': 'field_256','Outbound Call - NNPPC': 'field_257','Outbound Call - Orders/Donations': 'field_258','Outbound Call - Other': 'field_259','Outbound Call - Prayer': 'field_260','Outbound Call - Reconnect': 'field_261','Outbound Call - Relief': 'field_262','Outbound Email - CFL': 'field_263','Outbound Email - Disaster': 'field_264','Outbound Email - Faithful': 'field_265','Outbound Email - Finance': 'field_266','Outbound Email - Follow-up': 'field_267','Outbound Email - Holiday': 'field_268','Outbound Email - Lapsed': 'field_269','Outbound Email - Large Donor': 'field_270','Outbound Email - Ministry Expansion': 'field_271','Outbound Email - NNC': 'field_272','Outbound Email - NNPPC': 'field_273','Outbound Email - Order Fulfillment': 'field_274','Outbound Email - Other': 'field_275','Outbound Email - Prayer@renner': 'field_276','Outbound Email - Reconnect': 'field_277','Outbound Email - Relief': 'field_278','Outbound Email - Response': 'field_279','Outbound Mail - Card': 'field_280','Outbound Mail - Follow-up': 'field_281','Outbound Mail - Mini Book': 'field_282','Outbound Mail - Ministry Expansion': 'field_283','Outbound Mail - Other': 'field_284','Outbound Mail - PC Prayer Only': 'field_285','Outbound Mail - PC w/ Gift': 'field_286','Outbound Mail - Postcard': 'field_287' };
+
+// Maps to Total Interaction Statistic Report category and subcategory names in the report, not the actual names in knack
 const totalInteractionFields = {'Month/Year': 'field_375','Work Days Manual': 'field_454','Inbound Calls - Donation/Order': 'field_445','Inbound Calls - Finance': 'field_376','Inbound Calls - Free Offer Press 7': 'field_377','Inbound Calls - Front Desk Routed': 'field_446','Inbound Calls - Material Request': 'field_378','Inbound Calls - Ministry Expansion': 'field_379','Inbound Calls - Order/Donation': 'field_380','Inbound Calls - Other': 'field_381','Inbound Calls - Praise Report': 'field_382','Inbound Calls - Prayer': 'field_383','Inbound Calls - Prayer for Infilling of HS': 'field_384','Inbound Calls - Prayer for Salvation': 'field_385','Inbound Email - Free Offer': 'field_386','Inbound Email - Order Fulfillment': 'field_387','Inbound Email - Other': 'field_388','Inbound Email - Prayer': 'field_389','Inbound Email - prayer@deniserenner.org': 'field_390','Outbound Calls - Call from a Letter': 'field_391','Outbound Calls - Death in Family': 'field_392','Outbound Calls - Disaster': 'field_393','Outbound Calls - Faithful': 'field_394','Outbound Calls - Finance': 'field_395','Outbound Calls - Follow-up': 'field_396','Outbound Calls - Free Offer': 'field_397','Outbound Calls - Holiday': 'field_398','Outbound Calls - Lapsed': 'field_399','Outbound Calls - Large Donor': 'field_400','Outbound Calls - Meeting New Name': 'field_401','Outbound Calls - Ministry Expansion Project': 'field_402','Outbound Calls - New Partner': 'field_403','Outbound Calls - NNPPC (New Purchaser)': 'field_404','Outbound Calls - Orders/Donations (Voicemail response)': 'field_405','Outbound Calls - Other': 'field_406','Outbound Calls - Prayer': 'field_407','Outbound Calls - Reconnect/Reactivate Follow-up': 'field_408','Outbound Calls - Relief Project': 'field_409','Outbound Email - Call From Letter - email': 'field_410','Outbound Email - Disaster': 'field_411','Outbound Email - Faithful': 'field_412','Outbound Email - Finance': 'field_413','Outbound Email - Follow-up': 'field_414','Outbound Email - Holiday': 'field_415','Outbound Email - Lapsed': 'field_416','Outbound Email - Large Donor': 'field_417','Outbound Email - Ministry Expansion Project': 'field_418','Outbound Email - New Partners': 'field_419','Outbound Email - NNPPC (New Product Purchaser)': 'field_420','Outbound Email - Order Fulfillment': 'field_421','Outbound Email - Other': 'field_422','Outbound Email - Prayer@renner.org': 'field_423','Outbound Email - Reconnect': 'field_424','Outbound Email - Relief Project': 'field_425','Outbound Email - Response': 'field_426','Outbound Mail - Card': 'field_427','Outbound Mail - Follow-up': 'field_428','Outbound Mail - Mini Book': 'field_429','Outbound Mail - Ministry Expansion': 'field_430','Outbound Mail - Other': 'field_431','Outbound Mail - PC Prayer Only - Letter': 'field_432','Outbound Mail - PC w/ Gift': 'field_433','Outbound Mail - Postcard': 'field_434','Outbound Mail - Reconnect': 'field_444',' PDInbound Calls - Order Issue': 'field_435',' PDInbound Calls - Other': 'field_436','Inbound Calls Total': 'field_437','AverageInbound Calls per Day': 'field_457','Inbound Email Total': 'field_438','Outbound Calls Total': 'field_439','AverageOutbound Calls per Day': 'field_458','Outbound Email Total': 'field_440','AverageOutbound Email per Day': 'field_456','Outbound Mail Total': 'field_441','AverageOutbound Mail per Day': 'field_455','Total Responses': 'field_442','Average Total Responses per Day': 'field_459'};
 
-const noteStatFields = { '3CX Username': 'field_218', 'Inbound Call - Finance': 'field_219','Inbound Call - Free Offer': 'field_220','Inbound Call - Material Request': 'field_221','Inbound Call - Ministry Expansion': 'field_222','Inbound Call - Order/Donation': 'field_223','Inbound Call - Other': 'field_224','Inbound Call - Praise Report': 'field_225','Inbound Call - Prayer': 'field_226','Inbound Call - Prayer for Infilling of HS': 'field_227','Inbound Call - Prayer for Salvation': 'field_228','Inbound Email - Free Offer': 'field_229','Inbound Email - Order Fulfillment': 'field_230','Inbound Email - Other': 'field_231','Inbound Email - Prayer': 'field_232','Inbound Email - prayer@deniserenner.org': 'field_233','Outbound Call - Call from a Letter': 'field_244','Outbound Call - Death in Family': 'field_245','Outbound Call - Disaster': 'field_246','Outbound Call - Faithful': 'field_247','Outbound Call - Finance': 'field_248','Outbound Call - Follow-up': 'field_249','Outbound Call - Free Offer': 'field_250','Outbound Call - Holiday': 'field_251','Outbound Call - Lapsed': 'field_252','Outbound Call - Large Donor': 'field_253','Outbound Call - Meeting New Name': 'field_254','Outbound Call - Ministry Expansion': 'field_255','Outbound Call - New Donor': 'field_256','Outbound Call - NNPPC': 'field_257','Outbound Call - Orders/Donations': 'field_258','Outbound Call - Other': 'field_259','Outbound Call - Prayer': 'field_260','Outbound Call - Reconnect': 'field_261','Outbound Call - Relief': 'field_262','Outbound Email - CFL': 'field_263','Outbound Email - Disaster': 'field_264','Outbound Email - Faithful': 'field_265','Outbound Email - Finance': 'field_266','Outbound Email - Follow-up': 'field_267','Outbound Email - Holiday': 'field_268','Outbound Email - Lapsed': 'field_269','Outbound Email - Large Donor': 'field_270','Outbound Email - Ministry Expansion': 'field_271','Outbound Email - NNC': 'field_272','Outbound Email - NNPPC': 'field_273','Outbound Email - Order Fulfillment': 'field_274','Outbound Email - Other': 'field_275','Outbound Email - Prayer@renner': 'field_276','Outbound Email - Reconnect': 'field_277','Outbound Email - Relief': 'field_278','Outbound Email - Response': 'field_279','Outbound Mail - Card': 'field_280','Outbound Mail - Follow-up': 'field_281','Outbound Mail - Mini Book': 'field_282','Outbound Mail - Ministry Expansion': 'field_283','Outbound Mail - Other': 'field_284','Outbound Mail - PC Prayer Only': 'field_285','Outbound Mail - PC w/ Gift': 'field_286','Outbound Mail - Postcard': 'field_287' };
+// Maps to the columns in the TV Response Analysis Report, not the actual field names in knack
+const tvStatsFields = {'Broadcast Week': 'field_470','Air Date': 'field_471','# of Programs': 'field_472','Program Name': 'field_473','SG Downloaded': 'field_474','SG Sold': 'field_475',"Series Sold": 'field_476','Product Offer': 'field_477','Sold': 'field_478','Price': 'field_486','CD Price': 'field_479','DVD Price': 'field_485','Free Resource Offered': 'field_480','Free Resource Offered Text': 'field_497','Total Given Away': 'field_481','Ministry Stand up': 'field_482','Incoming Calls': 'field_483','Incoming Calls 2': 'field_496','Free Product Offer When Aired': 'field_484', 'Rerun of': 'field_494'};
 
 const RATE_LIMIT_DELAY_EVERY = 6; 
 const RATE_LIMIT_DELAY = 3150;
 
-let retryCount = 0;
-
 const API = {
 
     employeeIdMap: {},
+    tvResponseMaps: {},
 
     getAllEmployees() { 
         return new Promise((resolve, reject) => {
-            axios.get('/.netlify/functions/get-employees').then((response) => {
+            axios.get('/.netlify/functions/get-records?type=employees').then((response) => {
                 resolve(response.data.records);
             }).catch((response) => {
                 reject(`${response.data?.message}\n${response.data?.status}`);
@@ -69,22 +71,33 @@ const API = {
         return employeeMap;
     },
 
-    getAllQueueExtentions() {
-        return new Promise((resolve, reject) => {
-            axios.get('/.netlify/functions/get-call-stat-queues').then((response) => {
+    async getAllTvResponseProductOffers() {
+        const tvResponses = await new Promise((resolve, reject) => {
+            axios.get('/.netlify/functions/get-records?type=tvResponses').then((response) => {
                 resolve(response.data.records);
             }).catch((response) => {
                 reject(`${response.data?.message}\n${response.data?.status}`);
             });
         });
+
+        if (!Array.isArray(tvResponses)) {
+            alert('Current TV Responses did not load. Please load the page again if planning to upload a TV Response report.');
+        }
+
+        let tvResponsesMap = {};
+        for (let tvResponse of tvResponses) {
+            const productOfferName = String(tvResponse.field_477).toLowerCase();
+            tvResponsesMap[productOfferName] = tvResponse.id;
+        }
+        return tvResponsesMap;
     },
 
     async uploadAgentInQueueReport(csvText, updateUICallback) {
-        return this.uploadReport(csvText, 'Agent In Queue', updateUICallback);
+        return this.uploadCsvReport(csvText, 'Agent In Queue', updateUICallback);
     },
 
     async uploadNoteStatisticReport(csvText, updateUICallback) {
-        return this.uploadReport(csvText, 'Note Statistic', updateUICallback);
+        return this.uploadCsvReport(csvText, 'Note Statistic', updateUICallback);
     },
 
     /**
@@ -92,7 +105,7 @@ const API = {
      * 
      * @param {string} csvText 
      */
-    async uploadReport(csvText, type, updateUICallback) {
+    async uploadCsvReport(csvText, type, updateUICallback) {
         const headers = csvText.substring(0, getNextLineIndex(csvText, 0) - 1).split(',');
         // console.log(headers);
 
@@ -133,7 +146,7 @@ const API = {
             })[type];
 
             requestQueue.push({
-                url: `/.netlify/functions/create-stat-record?type=${netlifyType}`,
+                url: `/.netlify/functions/create-record?type=${netlifyType}`,
                 data: JSON.stringify(newRecordObject)
             });
         }
@@ -142,6 +155,8 @@ const API = {
     },
 
     async uploadTotalInteractionReport(xlsxArray, filename, updateUICallback) {
+
+        updateUICallback(null, null, `Parsing ${filename}`);
 
         const requestQueue = [];
         const year = Number(filename.substring(0, 4));
@@ -196,19 +211,144 @@ const API = {
                 newRecord[field] = xlsxArray[row][column];
             }
 
-            requestQueue.push({ url: `/.netlify/functions/create-stat-record?type=TotalInteractionStatistic`, data: newRecord });
+            requestQueue.push({ url: `/.netlify/functions/create-record?type=TotalInteractionStatistic`, data: newRecord });
         }
 
         await postRequestsEvery(requestQueue, RATE_LIMIT_DELAY / RATE_LIMIT_DELAY_EVERY, updateUICallback);
-    }
+    },
+    
+    async uploadProgramResponseReport (xlsxArray, filename, updateUICallback) {
+
+        updateUICallback(null, null, `Parsing ${filename}`);
+
+        const requestQueue = [], responses = [];
+        const year = Number(filename.substring(0, 4));
+        const headers = xlsxArray[0];
+        const monthNames = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
+        let broadcastWeek = '', startDate, endDate;
+
+        for (let row = 2; row < xlsxArray.length; row++) {
+            let newRecord = {};
+            
+            for (let column = 0; column < headers.length; column++) {
+
+                let data = xlsxArray[row][column];
+
+                if (monthNames.includes(data)) break; // Skips rows with Month headers
+                if (String(data).trim() === 'n/a') continue;
+
+                newRecord[tvStatsFields[headers[column]]] = ({
+                    'Broadcast Week': () => {
+                        if (data !== null) {
+                            data = broadcastWeek = xlsxArray[row][column];
+                        } else {
+                            // Columns 0-6 will be empty and expect the same broadcast weeks and dates as before
+                            newRecord[tvStatsFields['Air Date']] = createKnackToFromDateObject(startDate, endDate, false);
+                            column = 6;
+                            return broadcastWeek;
+                        }
+                    },
+                    'Air Date': () => {
+                        // Creates a knack date object from formatting
+                        startDate = new Date(`${data.substring(0, data.indexOf('-'))}, ${year}`);
+                        const afterHyphen = data.substring(data.indexOf('-') + 1);
+                        endDate = (Number.isNaN(Number(afterHyphen))) ?
+                              new Date(`${afterHyphen}, ${year}`)
+                            : new Date(`${startDate.getMonth() + 1} ${afterHyphen}, ${year}`);
+                        
+                        return createKnackToFromDateObject(startDate, endDate, false);
+                    },
+                    'Product Offer': () => {
+                        mapProductOffer();
+                        newRecord[tvStatsFields['Rerun of']] = API.tvResponseMaps[String(data).toLowerCase()]; // '~~~' or actual id
+                    },
+                    'Free Resource Offered': () => {
+                        newRecord[tvStatsFields['Free Resource Offered Text']] = data;
+                        mapProductOffer();
+                    },
+                    'Incoming Calls': () => {
+                        let slashIndex = String(data).indexOf('/');
+                        if (slashIndex === -1) slashIndex = String(data).indexOf('\\');
+
+                        if (slashIndex !== -1) {
+                            newRecord[tvStatsFields['Incoming Calls 2']] = String(data).substring(slashIndex + 1);
+                            return String(data).substring(0, slashIndex);
+                        }
+                    }
+                })[headers[column]]?.() ?? data;
+
+                function mapProductOffer() {
+                    const productOfferId = API.tvResponseMaps[String(data).toLowerCase()];
+                    
+                    if (!productOfferId) {
+                        // Placeholder for record id's not yet created in knack; id stored in recordCallback below, and replaced in beforeRequestCallback below
+                        API.tvResponseMaps[String(data).toLowerCase()] = '~~~';
+                    }
+                }
+            }
+
+            if (!Object.keys(newRecord).length) continue;
+            
+            requestQueue.push({ url: `/.netlify/functions/create-record?type=TVResponse`, data: newRecord });
+        }
+
+        const recordCallback = (recordIndex, totalRecordCount, message, response) => {
+            updateUICallback?.(recordIndex, totalRecordCount, message);
+
+            if (response?.data && !response?.data?.errors && API.tvResponseMaps[String(response.data.field_477).toLowerCase()] === '~~~') {
+                API.tvResponseMaps[String(response.data.field_477).toLowerCase()] = response.data.id;
+            }
+        }
+
+        const beforeRequestCallback = (newRecord) => {
+            // Replaces '~~~' placeholders with record ids for 'Rerun of' and 'Free Resource Offered' fields
+            if (newRecord[tvStatsFields['Rerun of']] === '~~~') {
+                const productOfferName = newRecord[tvStatsFields['Product Offer']];
+                replaceFieldWithOriginalProductOfferID(newRecord, tvStatsFields['Rerun of'], productOfferName);
+            }
+            if (newRecord[tvStatsFields['Free Resource Offered']]) {
+                const productOfferName = newRecord[tvStatsFields['Free Resource Offered']];
+                replaceFieldWithOriginalProductOfferID(newRecord, tvStatsFields['Free Resource Offered'], productOfferName);
+
+                if (newRecord[tvStatsFields['Free Resource Offered']] === '~~~' // no product offer found
+                    && newRecord[tvStatsFields['Free Resource Offered']] === newRecord[tvStatsFields['Product Offer']]) { // same free offer as current
+                    
+                    newRecord[tvStatsFields['Free Product Offer When Aired']] = true;
+                }
+            }
+
+            function replaceFieldWithOriginalProductOfferID(newRecord, field, productOfferName) {
+                const idOfOriginalRecord = API.tvResponseMaps[String(productOfferName).toLowerCase()];
+                newRecord[field] = idOfOriginalRecord;
+            }
+        }
+
+        await postRequestsEvery(requestQueue, null, recordCallback, true, beforeRequestCallback);
+    },
 }
 
 window.addEventListener("load", async () => {
-    API.employeeIdMap = await API.getAllEmployeeIds();
+    API.getAllEmployeeIds().then(map => {
+        API.employeeIdMap = map;
+    });
+    API.getAllTvResponseProductOffers().then(map => {
+        API.tvResponseMaps = map;
+    });
 });
 
-async function postRequestsEvery(requestQueue, spacedMillis, updateUICallback) {
-    await postRequests(requestQueue, spacedMillis, updateUICallback).catch((failedRequests) => {
+/**
+ * An asynchronos function that sends POST requests from an array of request objects with 'url' and 'data' properties every specified milliseconds, and returns the 
+ * successful responses in an array, additionally providing a updateUICallback function that runs every time a response is returned. Will provide a 'Retry Failed Requests'
+ * button in #logButtonContainer if any requests fail.
+ * 
+ * @param {*} requestQueue An array of objects with 'url' and 'data' properties for sending a POST request with the data to the specified url.
+ * @param {*} spacedMillis The number of milliseconds waited before sending another request.
+ * @param {*} updateUICallback A function that runs every time a response is returned, passing the request index, request total count, and message parameters. 
+ * @param {boolean} allMustSucceed If true, will stop sending requests when one fails, returning both failed and queued requests in an array within an error.
+ * @returns 
+ */
+async function postRequestsEvery(requestQueue, spacedMillis, updateUICallback, allMustSucceed, beforeRequestCallback) {
+    return await postRequests(requestQueue, spacedMillis, updateUICallback, allMustSucceed, beforeRequestCallback).catch((failedRequests) => {
         // appendLogMessage(`<button type='button' id='retryRequests-${retryCount}'>Retry Failed Requests</button>`);
         const retryButton = document.createElement('button');
         retryButton.type = 'button';
@@ -217,14 +357,35 @@ async function postRequestsEvery(requestQueue, spacedMillis, updateUICallback) {
 
         retryButton.addEventListener("click", async () => {
             retryButton.remove();
-            await postRequestsEvery(failedRequests, spacedMillis, updateUICallback);
+            await postRequestsEvery(failedRequests, spacedMillis, updateUICallback, allMustSucceed, beforeRequestCallback);
+
+            // Status update
+            updateUICallback(null, null, 'Done!');
+            updateStatusBarMessage('Done!');
         });
     });
 }
 
-async function postRequests(requestQueue, spacedMillis, updateUICallback) {
+/**
+ * An asynchronos function that sends POST requests from an array of request objects with 'url' and 'data' properties every specified milliseconds, and returns the 
+ * successful responses in an array, additionally providing a updateUICallback function that runs every time a response is returned. 
+ * 
+ * @param {*} requestQueue An array of objects with 'url' and 'data' properties for sending a POST request with the data to the specified url.
+ * @param {*} spacedMillis The number of milliseconds to wait before sending a new request. If null, will send a new request once the previous response has been received.
+ * @param {*} updateUICallback  A function that runs every time a response is returned, passing the request index, request total count, a message, and the response as
+ * parameters. 
+ * @returns 
+ */
+async function postRequests(requestQueue, spacedMillis, updateUICallback, allMustSucceed, beforeRequestCallback) {
+
+    if (!Array.isArray(requestQueue)) {
+        throw new TypeError("The requestQueue must be an array of objects with 'url' and 'data' properties for sending POST requests.");
+    } else if (requestQueue.length === 0) {
+        return;
+    }
+
     return new Promise(async (resolve, reject) => {
-        let i = 0, batchFailedRequests, failedRequests = [];
+        let i = 0, batchFailedRequests, failedRequests = [], responses = [];
         
         do {
             [requestQueue, batchFailedRequests] = await postRequestListWithDelay(requestQueue, spacedMillis, updateUICallback);
@@ -245,30 +406,58 @@ async function postRequests(requestQueue, spacedMillis, updateUICallback) {
             for (let { url, data } of requestList) {
                 const sendIndex = ++i;
 
-                updateUICallback(sendIndex, requestQueue.length);
-                axios.post(url, data).then(response => {
-                    updateUICallback(null, null, `Record request (${sendIndex} of ${REQUESTS_COUNT}) successful.`);
-                }).catch(response => {
-                    if (response.status === 429 || response.status === 128) { // Rate limit or a strange permissions error
-                        resendRequests.push({ url, data });
-                    } else {
-                        updateUICallback(null, null, `Could not send record request (${sendIndex} of ${REQUESTS_COUNT}): ${response.message}`);
-                        failed.push({ url, data });
+                try {
+                    beforeRequestCallback?.(data);
+                    await new Promise((resolve, reject) => {
+                        updateUICallback(sendIndex, requestQueue.length);
+
+                        axios.post(url, data).then(response => { // Successful send to netlify
+
+                            // Error handling of knack from netlify
+                            if (response?.data?.errors?.length) {
+                                console.log('knack error');
+                                for (let error of response.data.errors) {
+                                    updateUICallback(null, null, `Record request (${sendIndex} of ${REQUESTS_COUNT}) error: ${error?.message}`);
+                                }
+                                
+                                reject({ url, data });
+                                return;
+                            }
+
+                            responses.push(response);
+                            updateUICallback(null, null, `Record request (${sendIndex} of ${REQUESTS_COUNT}) successful.`, response);
+
+                            if (!spacedMillis) resolve(response);
+                        }).catch(response => {
+                            console.log('error response');
+
+                            if (response.status === 429 || response.status === 128) { // Rate limit or a strange permissions error
+                                resendRequests.push({ url, data });
+                            } else {
+                                updateUICallback(null, null, `Could not send record request (${sendIndex} of ${REQUESTS_COUNT}): ${response.message}`, response);
+                                failed.push({ url, data });
+                                reject({ url, data });
+                            }
+                        });
+
+                        if (spacedMillis) setTimeout(() => {
+                            resolve();
+                        }, spacedMillis);
+                    });
+                } catch (failedRequest) {
+                    // Creates the failed request record twice every time
+
+                    if (allMustSucceed) {
+                        return [resendRequests, failed.concat(requestList.splice(sendIndex))];
                     }
-                });
-    
-                await new Promise((resolve) => {
-                    setTimeout(() => {
-                        resolve();
-                    }, spacedMillis);
-                });
+                }
             }
 
             return [resendRequests, failed];
         }
 
         if (!failedRequests.length) {
-            resolve();
+            resolve(responses);
         } else {
             reject(failedRequests);
         }

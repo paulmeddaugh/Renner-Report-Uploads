@@ -10,9 +10,10 @@ window.onload = () => {
     const agentInQueueChooser = document.getElementById("agentInQueueFile");
     const noteStatsChooser = document.getElementById("noteStatsFile");
     const totalStatsChooser = document.getElementById("totalStatsFile");
+    const tvStatsChooser = document.getElementById('tvStatsFile');
 
-    // UI color changing
-    agentInQueueChooser.onchange = noteStatsChooser.onchange = totalStatsChooser.onchange = (e) => {
+    // UI color change when a file is selected
+    agentInQueueChooser.onchange = noteStatsChooser.onchange = totalStatsChooser.onchange = tvStatsChooser.onchange = (e) => {
         if (e.target.value) {
             e.target.classList.add('hasFile');
             e.target.nextSibling.nextSibling.classList.add('hasFileBtn');
@@ -22,77 +23,85 @@ window.onload = () => {
         }
     }
 
-    document.getElementById('agentInQueueSubmit').onclick = async (e) => {
-
-        if (uploadInProgress(e.target)) return;
-
-        if (agentInQueueChooser.files.length === 0) {
-            updateStatusBarMessage("No Agent In Queue report chosen.");
-        }
-
-        for (let file of agentInQueueChooser.files) {
-
-            uploading = true;
-            updateStatusBarMessage(`Reformatting ${file.name}`);
+    addUploadReportClickListener(
+        document.getElementById('agentInQueueSubmit'),
+        agentInQueueChooser,
+        async (file) => {
             let csvText = await file.text();
-            const formattedContent = reformatAgentInQueueReport(csvText);
-
-            updateStatusBarMessage(`Sending record requests to knack`);
-            await API.uploadAgentInQueueReport(formattedContent, (recordIndex, totalRecordsToSend, message) => {
+            const reformattedCsv = reformatAgentInQueueReport(csvText);
+            await API.uploadAgentInQueueReport(reformattedCsv, (recordIndex, totalRecordsToSend, message) => {
                 uploadStatus(recordIndex, totalRecordsToSend, message);
             });
-            uploading = false;
-            showFinishedUI(agentInQueueChooser);
         }
-    }
+    )
 
-    document.getElementById('noteStatsSubmit').onclick = async (e) => {
-
-        if (uploadInProgress(e.target)) return;
-
-        if (noteStatsChooser.files.length === 0) {
-            updateStatusBarMessage("No Note Statistic report chosen.");
-        }
-
-        for (let file of noteStatsChooser.files) {
-            
-            uploading = true;
-            updateStatusBarMessage(`Reformatting ${file.name}`);
+    addUploadReportClickListener(
+        document.getElementById('noteStatsSubmit'),
+        noteStatsChooser,
+        async (file) => {
             const csvText = await file.text();
             const transposedCsv = transposeCsv(csvText);
             const formattedContent = reformatNoteStatisticReport(transposedCsv);
-
-            updateStatusBarMessage(`Sending record requests to knack`);
-            await API.uploadNoteStatisticReport(formattedContent, (recordIndex, totalRecordsToSend, message) => {
+            await API.uploadAgentInQueueReport(formattedContent, (recordIndex, totalRecordsToSend, message) => {
                 uploadStatus(recordIndex, totalRecordsToSend, message);
             });
-            showFinishedUI(noteStatsChooser);
         }
-    }
+    )
 
-    document.getElementById('totalStatsSubmit').onclick = async (e) => {
+    addUploadReportClickListener(
+        document.getElementById('totalStatsSubmit'), 
+        totalStatsChooser, 
+        async (file) => {
+            const xlsxArr = await readXlsxFile(file);
+            await API.uploadTotalInteractionReport(xlsxArr, file.name, (recordIndex, totalRecordsToSend, message) => {
+                uploadStatus(recordIndex, totalRecordsToSend, message);
+            });
+        }
+    );
+
+    addUploadReportClickListener(
+        document.getElementById('tvStatsSubmit'),
+        tvStatsChooser,
+        async (file) => {
+            const xlsxArr = await readXlsxFile(file);
+            await API.uploadProgramResponseReport(xlsxArr, file.name, (recordIndex, totalRecordsToSend, message) => {
+                uploadStatus(recordIndex, totalRecordsToSend, message);
+            });
+        }
+    )
+};
+
+/**
+ * Added an onclick listener to the passed in submit button that retrieves the file of an 'input' file type element, and calls a function with the File object as a parameter.
+ * Takes care of boiler plate code of error handling, status logs, and UI cleanup once a file has been uploaded.
+ * 
+ * @param {*} submitButton The button element to add the click listener to.
+ * @param {*} fileCallback An asyncronous possible function that recieves the first File object from the 'file' typed input element as a parameter.
+ */
+function addUploadReportClickListener(submitButton, fileChooser, fileCallback) {
+    submitButton.onclick = async (e) => {
 
         if (uploadInProgress(e.target)) return;
 
-        if (totalStatsChooser.files.length === 0) {
-            updateStatusBarMessage("No Total Statistic report chosen.");
+        if (fileChooser.files.length === 0) {
+            const reportTypeName = ({
+                'agentInQueueSubmit': 'Agent In Queue',
+                'noteStatsSubmit': 'Note Statistic',
+                'totalStatsSubmit': 'Total Statistic',
+                'tvStatsSubmit': 'Program Response',
+            })[submitButton.id];
+
+            updateStatusBarMessage(`No ${reportTypeName} report chosen.`);
         }
 
-        for (let file of totalStatsChooser.files) {
-            
+        for (let file of fileChooser.files) {
             uploading = true;
-            updateStatusBarMessage(`Reformatting ${file.name}`);
-
-            readXlsxFile(file).then(async (data) => {
-                await API.uploadTotalInteractionReport(data, file.name, (recordIndex, totalRecordsToSend, message) => {
-                    uploadStatus(recordIndex, totalRecordsToSend, message);
-                });
-                showFinishedUI(totalStatsChooser);
-            })
+            updateStatusBarMessage(`Reformatting and parsing ${file.name}`);
+            await fileCallback?.(file);
+            showFinishedUI(fileChooser);
         }
     }
-
-};
+}
 
 function uploadStatus(recordIndex, totalRecordsToSend, logMessage) {
     if (recordIndex && totalRecordsToSend) updateStatusBarMessage(`Sending create record request (${recordIndex} of ${totalRecordsToSend})`);
