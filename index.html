@@ -13,16 +13,16 @@
   <body>
     <div id="knack-dist_2">Loading...</div>
     <main>
-        <h1 id="pageTitle">Custom Report Uploads</h1>
+        <h1 id="pageTitle">Report Uploads</h1>
         <div id="inputContainer">
             <div class="statistics">
                 <div class="inputRow">
-                    <input type="file" id="noteStatsFile" class="fileChooser"  accept=".csv">
-                    <button id="noteStatsSubmit" type="button">Upload Note Statistic Report</button>
+                    <input type="file" id="agentInQueueFile" class="fileChooser"  accept=".csv" />
+                    <button id="agentInQueueSubmit" type="button">Upload Agent In Queue Report</button>
                 </div>
                 <div class="inputRow">
-                    <input type="file" id="agentInQueueFile" class="fileChooser"  accept=".csv" />
-                    <button id="agentInQueueSubmit" type="button">Upload Call Statistic Report</button>
+                    <input type="file" id="noteStatsFile" class="fileChooser"  accept=".csv">
+                    <button id="noteStatsSubmit" type="button">Upload Note Statistic Report</button>
                 </div>
                 <div class="inputRow">
                     <input type="file" id="totalStatsFile" class="fileChooser"  accept=".xlsx" />
@@ -31,7 +31,12 @@
             </div>
             <div class="inputRow">
                 <input type="file" id="tvStatsFile" class="fileChooser"  accept=".xlsx">
-                <button id="tvStatsSubmit" type="button">Upload TV Response Report</button>
+                <button id="tvStatsSubmit" type="button">Upload Program Response Report</button>
+            </div>
+            <div class="linkRow">
+                <a class="callLoopLink" href="https://docs.google.com/spreadsheets/d/1wXGkn76QgheiKrvggEoZS_QViF5Lx2P1sdyVz6RGX54/edit#gid=0">
+                    Upload Call Loop Statistics from Dashboard Data
+                </a>
             </div>
         </div>
         <div>

@@ -1,9 +1,10 @@
 import axios from 'https://cdn.jsdelivr.net/npm/axios@1.4.0/+esm';
 import { getNextLineIndex, updateStatusBarMessage, appendLogMessage, appendLogElement, getKnackDateString } from './utility.js';
 
-const agentInQueueFields = {
+const agentInQueueFields = { // Call Statistics
     "Agent Extension": "field_318",
     "Agent": "field_319",
+    "Agent Text": 'field_510',
     "Queue Extension": "field_320",
     "Queue Name": "field_321",
     "Total Logged in Time": "field_322",
@@ -17,13 +18,13 @@ const agentInQueueFields = {
     "Date": "field_330",
 }
 
-const noteStatFields = { '3CX Username': 'field_218', 'Inbound Call - Finance': 'field_219','Inbound Call - Free Offer': 'field_220','Inbound Call - Material Request': 'field_221','Inbound Call - Ministry Expansion': 'field_222','Inbound Call - Order/Donation': 'field_223','Inbound Call - Other': 'field_224','Inbound Call - Praise Report': 'field_225','Inbound Call - Prayer': 'field_226','Inbound Call - Prayer for Infilling of HS': 'field_227','Inbound Call - Prayer for Salvation': 'field_228','Inbound Email - Free Offer': 'field_229','Inbound Email - Order Fulfillment': 'field_230','Inbound Email - Other': 'field_231','Inbound Email - Prayer': 'field_232','Inbound Email - prayer@deniserenner.org': 'field_233','Outbound Call - Call from a Letter': 'field_244','Outbound Call - Death in Family': 'field_245','Outbound Call - Disaster': 'field_246','Outbound Call - Faithful': 'field_247','Outbound Call - Finance': 'field_248','Outbound Call - Follow-up': 'field_249','Outbound Call - Free Offer': 'field_250','Outbound Call - Holiday': 'field_251','Outbound Call - Lapsed': 'field_252','Outbound Call - Large Donor': 'field_253','Outbound Call - Meeting New Name': 'field_254','Outbound Call - Ministry Expansion': 'field_255','Outbound Call - New Donor': 'field_256','Outbound Call - NNPPC': 'field_257','Outbound Call - Orders/Donations': 'field_258','Outbound Call - Other': 'field_259','Outbound Call - Prayer': 'field_260','Outbound Call - Reconnect': 'field_261','Outbound Call - Relief': 'field_262','Outbound Email - CFL': 'field_263','Outbound Email - Disaster': 'field_264','Outbound Email - Faithful': 'field_265','Outbound Email - Finance': 'field_266','Outbound Email - Follow-up': 'field_267','Outbound Email - Holiday': 'field_268','Outbound Email - Lapsed': 'field_269','Outbound Email - Large Donor': 'field_270','Outbound Email - Ministry Expansion': 'field_271','Outbound Email - NNC': 'field_272','Outbound Email - NNPPC': 'field_273','Outbound Email - Order Fulfillment': 'field_274','Outbound Email - Other': 'field_275','Outbound Email - Prayer@renner': 'field_276','Outbound Email - Reconnect': 'field_277','Outbound Email - Relief': 'field_278','Outbound Email - Response': 'field_279','Outbound Mail - Card': 'field_280','Outbound Mail - Follow-up': 'field_281','Outbound Mail - Mini Book': 'field_282','Outbound Mail - Ministry Expansion': 'field_283','Outbound Mail - Other': 'field_284','Outbound Mail - PC Prayer Only': 'field_285','Outbound Mail - PC w/ Gift': 'field_286','Outbound Mail - Postcard': 'field_287' };
+const noteStatFields = { '3CX Username': 'field_218', '3CX Username Text': 'field_509', 'Inbound Call - Finance': 'field_219','Inbound Call - Free Offer': 'field_220','Inbound Call - Material Request': 'field_221','Inbound Call - Ministry Expansion': 'field_222','Inbound Call - Order/Donation': 'field_223','Inbound Call - Other': 'field_224','Inbound Call - Praise Report': 'field_225','Inbound Call - Prayer': 'field_226','Inbound Call - Prayer for Infilling of HS': 'field_227','Inbound Call - Prayer for Salvation': 'field_228','Inbound Email - Free Offer': 'field_229','Inbound Email - Order Fulfillment': 'field_230','Inbound Email - Other': 'field_231','Inbound Email - Prayer': 'field_232','Inbound Email - prayer@deniserenner.org': 'field_233','Outbound Call - Call from a Letter': 'field_244','Outbound Call - Death in Family': 'field_245','Outbound Call - Disaster': 'field_246','Outbound Call - Faithful': 'field_247','Outbound Call - Finance': 'field_248','Outbound Call - Follow-up': 'field_249','Outbound Call - Free Offer': 'field_250','Outbound Call - Holiday': 'field_251','Outbound Call - Lapsed': 'field_252','Outbound Call - Large Donor': 'field_253','Outbound Call - Meeting New Name': 'field_254','Outbound Call - Ministry Expansion': 'field_255','Outbound Call - New Donor': 'field_256','Outbound Call - NNPPC': 'field_257','Outbound Call - Orders/Donations': 'field_258','Outbound Call - Other': 'field_259','Outbound Call - Prayer': 'field_260','Outbound Call - Reconnect': 'field_261','Outbound Call - Relief': 'field_262','Outbound Email - CFL': 'field_263','Outbound Email - Disaster': 'field_264','Outbound Email - Faithful': 'field_265','Outbound Email - Finance': 'field_266','Outbound Email - Follow-up': 'field_267','Outbound Email - Holiday': 'field_268','Outbound Email - Lapsed': 'field_269','Outbound Email - Large Donor': 'field_270','Outbound Email - Ministry Expansion': 'field_271','Outbound Email - NNC': 'field_272','Outbound Email - NNPPC': 'field_273','Outbound Email - Order Fulfillment': 'field_274','Outbound Email - Other': 'field_275','Outbound Email - Prayer@renner': 'field_276','Outbound Email - Reconnect': 'field_277','Outbound Email - Relief': 'field_278','Outbound Email - Response': 'field_279','Outbound Mail - Card': 'field_280','Outbound Mail - Follow-up': 'field_281','Outbound Mail - Mini Book': 'field_282','Outbound Mail - Ministry Expansion': 'field_283','Outbound Mail - Other': 'field_284','Outbound Mail - PC Prayer Only': 'field_285','Outbound Mail - PC w/ Gift': 'field_286','Outbound Mail - Postcard': 'field_287' };
 
 // Maps to Total Interaction Statistic Report category and subcategory names in the report, not the actual names in knack
 const totalInteractionFields = {'Month/Year': 'field_375','Work Days Manual': 'field_454','Inbound Calls - Donation/Order': 'field_445','Inbound Calls - Finance': 'field_376','Inbound Calls - Free Offer Press 7': 'field_377','Inbound Calls - Front Desk Routed': 'field_446','Inbound Calls - Material Request': 'field_378','Inbound Calls - Ministry Expansion': 'field_379','Inbound Calls - Order/Donation': 'field_380','Inbound Calls - Other': 'field_381','Inbound Calls - Praise Report': 'field_382','Inbound Calls - Prayer': 'field_383','Inbound Calls - Prayer for Infilling of HS': 'field_384','Inbound Calls - Prayer for Salvation': 'field_385','Inbound Email - Free Offer': 'field_386','Inbound Email - Order Fulfillment': 'field_387','Inbound Email - Other': 'field_388','Inbound Email - Prayer': 'field_389','Inbound Email - prayer@deniserenner.org': 'field_390','Outbound Calls - Call from a Letter': 'field_391','Outbound Calls - Death in Family': 'field_392','Outbound Calls - Disaster': 'field_393','Outbound Calls - Faithful': 'field_394','Outbound Calls - Finance': 'field_395','Outbound Calls - Follow-up': 'field_396','Outbound Calls - Free Offer': 'field_397','Outbound Calls - Holiday': 'field_398','Outbound Calls - Lapsed': 'field_399','Outbound Calls - Large Donor': 'field_400','Outbound Calls - Meeting New Name': 'field_401','Outbound Calls - Ministry Expansion Project': 'field_402','Outbound Calls - New Partner': 'field_403','Outbound Calls - NNPPC (New Purchaser)': 'field_404','Outbound Calls - Orders/Donations (Voicemail response)': 'field_405','Outbound Calls - Other': 'field_406','Outbound Calls - Prayer': 'field_407','Outbound Calls - Reconnect/Reactivate Follow-up': 'field_408','Outbound Calls - Relief Project': 'field_409','Outbound Email - Call From Letter - email': 'field_410','Outbound Email - Disaster': 'field_411','Outbound Email - Faithful': 'field_412','Outbound Email - Finance': 'field_413','Outbound Email - Follow-up': 'field_414','Outbound Email - Holiday': 'field_415','Outbound Email - Lapsed': 'field_416','Outbound Email - Large Donor': 'field_417','Outbound Email - Ministry Expansion Project': 'field_418','Outbound Email - New Partners': 'field_419','Outbound Email - NNPPC (New Product Purchaser)': 'field_420','Outbound Email - Order Fulfillment': 'field_421','Outbound Email - Other': 'field_422','Outbound Email - Prayer@renner.org': 'field_423','Outbound Email - Reconnect': 'field_424','Outbound Email - Relief Project': 'field_425','Outbound Email - Response': 'field_426','Outbound Mail - Card': 'field_427','Outbound Mail - Follow-up': 'field_428','Outbound Mail - Mini Book': 'field_429','Outbound Mail - Ministry Expansion': 'field_430','Outbound Mail - Other': 'field_431','Outbound Mail - PC Prayer Only - Letter': 'field_432','Outbound Mail - PC w/ Gift': 'field_433','Outbound Mail - Postcard': 'field_434','Outbound Mail - Reconnect': 'field_444',' PDInbound Calls - Order Issue': 'field_435',' PDInbound Calls - Other': 'field_436','Inbound Calls Total': 'field_437','AverageInbound Calls per Day': 'field_457','Inbound Email Total': 'field_438','Outbound Calls Total': 'field_439','AverageOutbound Calls per Day': 'field_458','Outbound Email Total': 'field_440','AverageOutbound Email per Day': 'field_456','Outbound Mail Total': 'field_441','AverageOutbound Mail per Day': 'field_455','Total Responses': 'field_442','Average Total Responses per Day': 'field_459'};
 
 // Maps to the columns in the TV Response Analysis Report, not the actual field names in knack
-const tvStatsFields = {'Broadcast Week': 'field_470','Air Date': 'field_471','# of Programs': 'field_472','Program Name': 'field_473','SG Downloaded': 'field_474','SG Sold': 'field_475',"Series Sold": 'field_476','Product Offer': 'field_477','Sold': 'field_478','Price': 'field_486','CD Price': 'field_479','DVD Price': 'field_485','Free Resource Offered': 'field_480','Free Resource Offered Text': 'field_497','Total Given Away': 'field_481','Ministry Stand up': 'field_482','Incoming Calls': 'field_483','Incoming Calls 2': 'field_496','Free Product Offer When Aired': 'field_484', 'Rerun of': 'field_494'};
+const tvStatsFields = {'Broadcast Week': 'field_470','Air Date': 'field_471','# of Programs': 'field_472','Program Name': 'field_473','SG Downloaded': 'field_474','SG Sold': 'field_475',"Series Sold": 'field_476','Product Offer': 'field_477','Sold': 'field_478','Price': 'field_486','Price 2': 'field_498','Free Resource Offered': 'field_480','Free Resource Offered Text': 'field_497','Total Given Away': 'field_481','Ministry Stand up': 'field_482','Incoming Calls': 'field_483','Incoming Calls 2': 'field_496','Free Product Offer When Aired': 'field_484', 'Rerun of': 'field_494'};
 
 const RATE_LIMIT_DELAY_EVERY = 6; 
 const RATE_LIMIT_DELAY = 3150;
@@ -134,7 +135,12 @@ const API = {
                     // Converts date to an object format that will go into knack
                     nextLineData[columnIndex] = createKnackToFromDateObject(fromDate, toDate);
                 } else if (header === 'Agent' || header === '3CX Username') {
-                    nextLineData[columnIndex] = this.employeeIdMap[String(nextLineData[columnIndex]).toLowerCase()]
+
+                    // Stores simple employee name text in another field
+                    newRecordObject[header === 'Agent' ? agentInQueueFields['Agent Text'] : noteStatFields['3CX Username Text']] 
+                        = String(nextLineData[columnIndex]).toLowerCase();
+
+                    nextLineData[columnIndex] = this.employeeIdMap[String(nextLineData[columnIndex]).toLowerCase()];
                 }
 
                 newRecordObject[field] = nextLineData[columnIndex];
@@ -259,37 +265,50 @@ const API = {
                         return createKnackToFromDateObject(startDate, endDate, false);
                     },
                     'Product Offer': () => {
-                        mapProductOffer();
+                        mapProductOffer(data);
                         newRecord[tvStatsFields['Rerun of']] = API.tvResponseMaps[String(data).toLowerCase()]; // '~~~' or actual id
+                    },
+                    'Price': () => {
+                        const slashValue = getValueAfterSlash(data);
+                        if (slashValue) {
+                            newRecord[tvStatsFields['Price 2']] = slashValue;
+                            return String(data).substring(0, String(data).indexOf(slashValue) - 1);
+                        }
                     },
                     'Free Resource Offered': () => {
                         newRecord[tvStatsFields['Free Resource Offered Text']] = data;
-                        mapProductOffer();
+                        mapProductOffer(data);
                     },
                     'Incoming Calls': () => {
-                        let slashIndex = String(data).indexOf('/');
-                        if (slashIndex === -1) slashIndex = String(data).indexOf('\\');
-
-                        if (slashIndex !== -1) {
-                            newRecord[tvStatsFields['Incoming Calls 2']] = String(data).substring(slashIndex + 1);
-                            return String(data).substring(0, slashIndex);
+                        const slashValue = getValueAfterSlash(data);
+                        if (slashValue) {
+                            newRecord[tvStatsFields['Incoming Calls 2']] = slashValue;
+                            return String(data).substring(0, String(data).indexOf(slashValue) - 1);
                         }
                     }
                 })[headers[column]]?.() ?? data;
 
-                function mapProductOffer() {
-                    const productOfferId = API.tvResponseMaps[String(data).toLowerCase()];
-                    
-                    if (!productOfferId) {
-                        // Placeholder for record id's not yet created in knack; id stored in recordCallback below, and replaced in beforeRequestCallback below
-                        API.tvResponseMaps[String(data).toLowerCase()] = '~~~';
-                    }
-                }
             }
-
+            
             if (!Object.keys(newRecord).length) continue;
             
             requestQueue.push({ url: `/.netlify/functions/create-record?type=TVResponse`, data: newRecord });
+        }
+
+        function getValueAfterSlash(data) {
+            let slashIndex = String(data).indexOf('/');
+            if (slashIndex === -1) slashIndex = String(data).indexOf('\\');
+
+            return (slashIndex !== -1) ? String(data).substring(slashIndex + 1) : null;
+        }
+
+        function mapProductOffer(data) {
+            const productOfferId = API.tvResponseMaps[String(data).toLowerCase()];
+            
+            if (!productOfferId) {
+                // Placeholder for record id's not yet created in knack; id stored in recordCallback below, and replaced in beforeRequestCallback below
+                API.tvResponseMaps[String(data).toLowerCase()] = '~~~';
+            }
         }
 
         const recordCallback = (recordIndex, totalRecordCount, message, response) => {

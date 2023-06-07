@@ -42,7 +42,7 @@ window.onload = () => {
             const csvText = await file.text();
             const transposedCsv = transposeCsv(csvText);
             const formattedContent = reformatNoteStatisticReport(transposedCsv);
-            await API.uploadAgentInQueueReport(formattedContent, (recordIndex, totalRecordsToSend, message) => {
+            await API.uploadNoteStatisticReport(formattedContent, (recordIndex, totalRecordsToSend, message) => {
                 uploadStatus(recordIndex, totalRecordsToSend, message);
             });
         }
