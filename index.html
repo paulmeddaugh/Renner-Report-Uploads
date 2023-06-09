@@ -19,25 +19,58 @@
                 <div class="inputRow">
                     <input type="file" id="agentInQueueFile" class="fileChooser"  accept=".csv" />
                     <button id="agentInQueueSubmit" type="button">Upload Agent In Queue Report</button>
+                    <span class="helpIcon" src="./resources/help-155-48.png" alt="formatting">
+                        <div class="tooltip">
+                            Must have same column and row format as <a href="./resources/sampleFiles/Agent in queue stats template.csv">this</a> file.<br />
+                        </div>
+                    </span>
                 </div>
                 <div class="inputRow">
                     <input type="file" id="noteStatsFile" class="fileChooser"  accept=".csv">
                     <button id="noteStatsSubmit" type="button">Upload Note Statistic Report</button>
+                    <span class="helpIcon" src="./resources/help-155-48.png" alt="formatting">
+                        <div class="tooltip">
+                            Must have same column and row format as <a href="./resources/sampleFiles/Note Type Stats template.csv">this</a> file.<br />
+                            The third row must have the date in the second column in the format of "mm/dd/yyyy [time] To mm/dd/yyyy [time]".
+                        </div>
+                    </span>
                 </div>
                 <div class="inputRow">
                     <input type="file" id="totalStatsFile" class="fileChooser"  accept=".xlsx" />
                     <button id="totalStatsSubmit" type="button">Upload Total Interaction Report</button>
+                    <span class="helpIcon" src="./resources/help-155-48.png" alt="formatting">
+                        <div class="tooltip">
+                            Must have same column and row format as <a href="./resources/sampleFiles/2022 PC Interactions Report Final template.xlsx">this</a> file.<br />
+                            Must have the year as the first four digits of the file name.<br />
+                            The second row must be formatted with the number of work days followed by a space, and a "([number] actual)" phrase if that number is offset.<br />
+                            Totals are calculated in knack and are not necessary in the report.<br />
+                        </div>
+                    </span>
                 </div>
-            </div>
-            <div class="inputRow">
-                <input type="file" id="tvStatsFile" class="fileChooser"  accept=".xlsx">
-                <button id="tvStatsSubmit" type="button">Upload Program Response Report</button>
+                <div class="inputRow">
+                    <input type="file" id="tvStatsFile" class="fileChooser"  accept=".xlsx">
+                    <button id="tvStatsSubmit" type="button">Upload Program Response Report</button>
+                    <span class="helpIcon" src="./resources/help-155-48.png" alt="formatting">
+                        <div class="tooltip">
+                            Must have same column and row format as <a href="./resources/sampleFiles/2022 Program Response Analysis template.xlsx">this</a> file.<br />
+                            Must have the year as the first four digits of the file name.<br />
+                        </div>
+                    </span>
+                </div>
             </div>
             <div class="linkRow">
                 <button id="callLoopStatsButton" type="button" href="https://docs.google.com/spreadsheets/d/1wXGkn76QgheiKrvggEoZS_QViF5Lx2P1sdyVz6RGX54/edit#gid=0">
-                    <image src="./resources/callLoopIcon.ico">
+                    <img src="./resources/icons/callLoopIcon.ico">
                     Upload Call Loop Dashboard Data
                 </button>
+                <span class="helpIcon" src="./resources/help-155-48.png" alt="formatting">
+                    <div class="tooltip">
+                        Copy the entire dashboard from the Call Loop website.<br />
+                        Paste the dashboard over the entire content in the 'Call Loop Statistics' google sheet (click in sheet, Ctr+A, Ctr+V).<br />
+                        This will upload new records with a current time stamp for each row of the dashboard.<br />
+                        To share access for editing the google sheet, click 'Share' and select any method listed.<br />
+                    </div>
+                </span>
             </div>
         </div>
         <div>

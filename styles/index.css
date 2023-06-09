@@ -33,6 +33,44 @@ h1 {
 
 .fileChooser {
     flex: 1;
+    flex-basis: auto;
+}
+
+.helpIcon {
+    background-image: url(../resources/icons/help-155-48.png);
+    width: 14px;
+    min-width: 14px;
+    height: 14px;
+    background-size: contain;
+    margin-top: 4px;
+    margin-left: 3px;
+    position: relative;
+    flex-basis: auto;
+}
+
+.helpIcon .tooltip {
+    position: absolute;
+    top: 75%;
+    right: 75%;
+    width: clamp(200px, 50vw, 325px);
+    height: max-content;
+    visibility: hidden;
+    background-color: whitesmoke;
+    padding: 5px;
+    border: 1px solid lightgray;
+    border-radius: 3px;
+    z-index: 5;
+    font-size: 10pt;
+}
+
+.helpIcon:hover .tooltip {
+    visibility: visible;
+}
+
+.helpIcon .tooltip a {
+    text-decoration: none;
+    color: dodgerblue;
+    border-bottom: 1px solid dodgerblue;
 }
 
 button {
