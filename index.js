@@ -1,11 +1,12 @@
 import API from './scripts/API.js';
 import { reformatAgentInQueueReport, reformatNoteStatisticReport } from './scripts/csvReformatting.js';
 import { transposeCsv, updateStatusBarMessage, getStatusBarMessage, getLogMessage, appendLogMessage, appendLogElement } from './scripts/utility.js';
+import axios from 'https://cdn.jsdelivr.net/npm/axios@1.4.0/+esm';
 // import * as XLSX from "xlsx";
 
 let uploading = false;
 
-window.onload = () => {
+window.onload = async () => {
 
     const agentInQueueChooser = document.getElementById("agentInQueueFile");
     const noteStatsChooser = document.getElementById("noteStatsFile");
@@ -69,6 +70,10 @@ window.onload = () => {
             });
         }
     )
+
+    document.getElementById('callLoopStatsButton').onclick = (e) => {
+        location.href = e.target.getAttribute('href');
+    }
 };
 
 /**

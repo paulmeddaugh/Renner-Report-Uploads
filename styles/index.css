@@ -26,9 +26,9 @@ h1 {
 }
 
 .linkRow {
-    margin: 20px 0;
+    margin: 30px 0;
     display: flex;
-    justify-content: right;
+    justify-content: center;
 }
 
 .fileChooser {
@@ -44,6 +44,14 @@ button {
 
 .rejectUpload {
     animation: rejectUpload 1s ease;
+}
+
+#callLoopStatsButton {
+    display: flex;
+}
+
+#callLoopStatsButton img {
+    margin-right: 6px;
 }
 
 @keyframes rejectUpload {
@@ -100,14 +108,14 @@ button {
     width: 100%;
 }
 
-.kn-scenes.kn-section .kn-scene .view-group-1, .kn-scenes.kn-section .kn-scene .view-group-2 {
+.kn-scenes.kn-section .kn-scene .view-group-1, .kn-scenes.kn-section .kn-scene .view-group-2, #view_89 {
     display: none;
+}
+
+#kn-loading-spinner {
+    visibility: hidden;
 }
 
 .kn-crumbtrail {
     visibility: visible;
-}
-
-#view_89 {
-    display: none;
 }
