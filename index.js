@@ -72,7 +72,7 @@ window.onload = async () => {
     )
 
     document.getElementById('callLoopStatsButton').onclick = (e) => {
-        location.href = e.target.getAttribute('href');
+        window.open(e.target.getAttribute('href'), '_blank');
     }
 };
 
