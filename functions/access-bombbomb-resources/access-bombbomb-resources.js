@@ -1,5 +1,11 @@
 // Docs on event and context https://docs.netlify.com/functions/build/#code-your-function-2
 
+const basicHeaders = { 
+  'Access-Control-Allow-Origin': 'https://renner.knack.com', 
+  'Access-Control-Allow-Headers': 'Content-Type, Accept, Origin', 
+  'Access-Control-Allow-Methods': 'POST, OPTIONS'
+};
+
 //localhost:8888/.netlify/functions/get-bombbomb-access-token
 const handler = async (event) => {
 
@@ -12,12 +18,7 @@ const handler = async (event) => {
     }
 
     if (event.httpMethod === 'OPTIONS') {
-      const headers = { 
-        'Access-Control-Allow-Origin': 'https://renner.knack.com', 
-        'Access-Control-Allow-Headers': 'Content-Type, Accept, Origin', 
-        'Access-Control-Allow-Methods': 'POST, OPTIONS'
-      };
-      return { statusCode: 200, headers };
+      return { statusCode: 200, headers: basicHeaders };
     }
 
     let code, client_id;
@@ -38,7 +39,7 @@ const handler = async (event) => {
     };
     
     try {
-      const response = await fetch('https://app.bombbomb.com/auth/access_token', { method: 'POST', body: JSON.stringify(postData), headers });
+      const response = await fetch('https://app.bombbomb.com/auth/access_token', { method: 'POST', body: JSON.stringify(postData), headers: { ...basicHeaders, ...headers } });
       const text = await response.text();
 
       return { statusCode: 200, body: text };
