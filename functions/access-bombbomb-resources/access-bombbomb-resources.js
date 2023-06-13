@@ -3,12 +3,16 @@
 //localhost:8888/.netlify/functions/get-bombbomb-access-token
 const handler = async (event) => {
 
-    if (event.httpMethod !== 'POST') {
+    if (event.httpMethod !== 'POST' || event.httpMethod !== 'OPTIONS') {
         return {
             statusCode: 501,
             body: JSON.stringify({ message: "Not Implemented" }),
             headers: { 'content-type': 'application/json' }
         }
+    }
+
+    if (event.httpMethod === 'OPTIONS') {
+      return { statusCode: 200, headers: { 'Access-Control-Allow-Origin': 'https://renner.knack.com/' } };
     }
 
     let code, client_id;
