@@ -12,7 +12,7 @@ const handler = async (event) => {
     }
 
     if (event.httpMethod === 'OPTIONS') {
-      return { statusCode: 200, headers: { 'Access-Control-Allow-Origin': 'https://renner.knack.com/' } };
+      return { statusCode: 200, headers: { 'Access-Control-Allow-Origin': 'https://renner.knack.com' } };
     }
 
     let code, client_id;
