@@ -35,7 +35,7 @@ const handler = async (event) => {
       return { statusCode: 200, body: text };
 
     } catch (error) {
-      return { statusCode: 500, body: error.toString() };
+      return { statusCode: 500, body: error.toString(), headers: { 'Access-Control-Allow-Origin': 'https://renner.knack.com/' } };
     }
 }
 
