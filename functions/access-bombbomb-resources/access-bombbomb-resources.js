@@ -3,7 +3,7 @@
 //localhost:8888/.netlify/functions/get-bombbomb-access-token
 const handler = async (event) => {
 
-    if (event.httpMethod !== 'POST' || event.httpMethod !== 'OPTIONS') {
+    if (event.httpMethod !== 'POST' && event.httpMethod !== 'OPTIONS') {
         return {
             statusCode: 501,
             body: JSON.stringify({ message: "Not Implemented" }),
@@ -39,7 +39,7 @@ const handler = async (event) => {
       return { statusCode: 200, body: text };
 
     } catch (error) {
-      return { statusCode: 500, body: error.toString(), headers: { 'Access-Control-Allow-Origin': 'https://renner.knack.com/' } };
+      return { statusCode: 500, body: error.toString(), headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://renner.knack.com/' } };
     }
 }
 
