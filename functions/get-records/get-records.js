@@ -1,8 +1,8 @@
 // Docs on event and context https://docs.netlify.com/functions/build/#code-your-function-2
   
 const basicHeaders = {
-    'X-Knack-Application-Id': process.env.API_ID,
-    'X-Knack-REST-API-Key': process.env.API_KEY,
+    'X-Knack-Application-Id': process.env.KID,
+    'X-Knack-REST-API-Key': process.env.KKEY,
 }
 
 const headers = {

@@ -1,8 +1,8 @@
 // Docs on event and context https://docs.netlify.com/functions/build/#code-your-function-2
 
 const knackConfig = {
-  apiId: process.env.API_ID,
-  apiKey: process.env.API_KEY,
+  apiId: process.env.KID,
+  apiKey: process.env.KKEY,
 }
 
 const basicHeaders = {

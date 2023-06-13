@@ -23,8 +23,8 @@ const handler = async (event) => {
     const headers = { 'Content-Type': 'application/json' };
     const postData = {
       "grant_type": "authorization_code",
-      "client_id": process.env.BOMBBOMB_CLIENT_ID,
-      "client_secret": process.env.BOMBBOMB_CLIENT_SECRET,
+      "client_id": process.env.BID,
+      "client_secret": process.env.BSECRET,
       "code": code,
     };
     
