@@ -39,13 +39,13 @@ const handler = async (event) => {
     };
     
     try {
-      const response = await fetch('https://app.bombbomb.com/auth/access_token', { method: 'POST', body: JSON.stringify(postData), headers: { ...basicHeaders, ...headers } });
+      const response = await fetch('https://app.bombbomb.com/auth/access_token', { method: 'POST', body: JSON.stringify(postData), headers });
       const text = await response.text();
 
-      return { statusCode: 200, body: text };
+      return { statusCode: 200, body: text, headers: { ...basicHeaders, 'Content-Type': 'application/json'} };
 
     } catch (error) {
-      return { statusCode: 500, body: error.toString(), headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://renner.knack.com/' } };
+      return { statusCode: 500, body: error.toString(), headers: { 'Content-Type': 'text/plain', ...basicHeaders } };
     }
 }
 
