@@ -21,8 +21,10 @@
                     <button id="agentInQueueSubmit" type="button">Upload Agent In Queue Report</button>
                     <span class="helpIcon" src="./resources/help-155-48.png" alt="formatting">
                         <div class="tooltip">
-                            Must have same column and row format as <a href="./resources/sampleFiles/Agent in queue stats template.csv">this</a> file.<br />
-                            The third row, second column must have the date of the report in the format of "mm/dd/yyyy [time] To mm/dd/yyyy [time]".
+                            <ul>
+                                <li>Must have same column and row format as <a href="./resources/sampleFiles/Agent in queue stats template.csv">this</a> file.</li>
+                                <li>The third row, second column must have the date of the report in the format of "mm/dd/yyyy [time] To mm/dd/yyyy [time]".</li>
+                            </ul>
                         </div>
                     </span>
                 </div>
@@ -31,8 +33,10 @@
                     <button id="noteStatsSubmit" type="button">Upload Note Statistic Report</button>
                     <span class="helpIcon" src="./resources/help-155-48.png" alt="formatting">
                         <div class="tooltip">
-                            Must have same column and row format as <a href="./resources/sampleFiles/Note Type Stats template.csv">this</a> file.<br />
-                            Must have names as column headers from the third column on, in the format of "[first letter of first name][last name]".
+                            <ul>
+                                <li>Must have same column and row format as <a href="./resources/sampleFiles/Note Type Stats template.csv">this</a> file.</li>
+                                <li>Must have employee names as the column headers from the third column on, in the format of "[first letter of first name][last name]".</li>
+                            </ul>
                         </div>
                     </span>
                 </div>
@@ -41,10 +45,14 @@
                     <button id="totalStatsSubmit" type="button">Upload Total Interaction Report</button>
                     <span class="helpIcon" src="./resources/help-155-48.png" alt="formatting">
                         <div class="tooltip">
-                            Must have same column and row format as <a href="./resources/sampleFiles/2022 PC Interactions Report Final template.xlsx">this</a> file.<br />
-                            Must have the year as the first four digits of the file name.<br />
-                            The second row columns must have the number of work days followed by a space, and a "([number] actual)" phrase if that number is overridden.<br />
-                            Totals are calculated in knack and are not required in the report.<br />
+                            <ul>
+                                <li>Must have the same format as <a href="./resources/sampleFiles/2022 PC Interactions Report Final template.xlsx">this</a> file.</li>
+                                <li>Must have the report year as the first four digits of the file name.</li>
+                                <li>The second row must have the number of work days in the month followed by a space, and a "([number] actual)" phrase if that number is overridden.</li>
+                                <li>The algorithm picks up all rows after a row with the category name in the first column till a row with a "Total [category name]" label in the first column, excluding "Digital Outreach".</li>
+                                <li>Category and subcategory names are in-case sensitive, and supports all subcategories in the linked template above, as well as those from the Note Statistics template.
+                                <li>Totals are calculated in knack and are not required in the report.</li>
+                            </ul>
                         </div>
                     </span>
                 </div>
@@ -53,8 +61,10 @@
                     <button id="tvStatsSubmit" type="button">Upload Program Response Report</button>
                     <span class="helpIcon" src="./resources/help-155-48.png" alt="formatting">
                         <div class="tooltip">
-                            Must have same column and row format as <a href="./resources/sampleFiles/2022 Program Response Analysis template.xlsx">this</a> file.<br />
-                            Must have the year as the first four digits of the file name.<br />
+                            <ul>
+                                <li>Must have same column and row format as <a href="./resources/sampleFiles/2022 Program Response Analysis template.xlsx">this</a> file.</li>
+                                <li>Must have the report year as the first four digits of the file name.</li>
+                            </ul>
                         </div>
                     </span>
                 </div>
@@ -66,10 +76,12 @@
                 </button>
                 <span class="helpIcon" src="./resources/help-155-48.png" alt="formatting">
                     <div class="tooltip">
-                        Copy the entire dashboard from the Call Loop website.<br />
-                        Paste the dashboard over the entire content in the 'Call Loop Statistics' google sheet (click in sheet, Ctr+A, Ctr+V).<br />
-                        This will upload new records with a current time stamp for each row of the dashboard.<br />
-                        To share access for editing the google sheet, click 'Share' and select any method listed.<br />
+                        <ul>
+                            <li>Copy entire dashboard on the Call Loop website.</li>
+                            <li>Paste over the entire content in the linked google sheet (Ctr+A, Ctr+V).</li>
+                            <li>This will upload new records with a current time stamp for each row of the dashboard.</li>
+                            <li>To share access for editing the google sheet, click 'Share' and select any method listed.</li>
+                        </ul>
                     </div>
                 </span>
             </div>

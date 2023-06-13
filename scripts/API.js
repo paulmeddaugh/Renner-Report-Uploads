@@ -21,10 +21,14 @@ const agentInQueueFields = { // Call Statistics
 const noteStatFields = { '3CX Username': 'field_218', '3CX Username Text': 'field_509', 'Inbound Call - Finance': 'field_219','Inbound Call - Free Offer': 'field_220','Inbound Call - Material Request': 'field_221','Inbound Call - Ministry Expansion': 'field_222','Inbound Call - Order/Donation': 'field_223','Inbound Call - Other': 'field_224','Inbound Call - Praise Report': 'field_225','Inbound Call - Prayer': 'field_226','Inbound Call - Prayer for Infilling of HS': 'field_227','Inbound Call - Prayer for Salvation': 'field_228','Inbound Email - Free Offer': 'field_229','Inbound Email - Order Fulfillment': 'field_230','Inbound Email - Other': 'field_231','Inbound Email - Prayer': 'field_232','Inbound Email - prayer@deniserenner.org': 'field_233','Outbound Call - Call from a Letter': 'field_244','Outbound Call - Death in Family': 'field_245','Outbound Call - Disaster': 'field_246','Outbound Call - Faithful': 'field_247','Outbound Call - Finance': 'field_248','Outbound Call - Follow-up': 'field_249','Outbound Call - Free Offer': 'field_250','Outbound Call - Holiday': 'field_251','Outbound Call - Lapsed': 'field_252','Outbound Call - Large Donor': 'field_253','Outbound Call - Meeting New Name': 'field_254','Outbound Call - Ministry Expansion': 'field_255','Outbound Call - New Donor': 'field_256','Outbound Call - NNPPC': 'field_257','Outbound Call - Orders/Donations': 'field_258','Outbound Call - Other': 'field_259','Outbound Call - Prayer': 'field_260','Outbound Call - Reconnect': 'field_261','Outbound Call - Relief': 'field_262','Outbound Email - CFL': 'field_263','Outbound Email - Disaster': 'field_264','Outbound Email - Faithful': 'field_265','Outbound Email - Finance': 'field_266','Outbound Email - Follow-up': 'field_267','Outbound Email - Holiday': 'field_268','Outbound Email - Lapsed': 'field_269','Outbound Email - Large Donor': 'field_270','Outbound Email - Ministry Expansion': 'field_271','Outbound Email - NNC': 'field_272','Outbound Email - NNPPC': 'field_273','Outbound Email - Order Fulfillment': 'field_274','Outbound Email - Other': 'field_275','Outbound Email - Prayer@renner': 'field_276','Outbound Email - Reconnect': 'field_277','Outbound Email - Relief': 'field_278','Outbound Email - Response': 'field_279','Outbound Mail - Card': 'field_280','Outbound Mail - Follow-up': 'field_281','Outbound Mail - Mini Book': 'field_282','Outbound Mail - Ministry Expansion': 'field_283','Outbound Mail - Other': 'field_284','Outbound Mail - PC Prayer Only': 'field_285','Outbound Mail - PC w/ Gift': 'field_286','Outbound Mail - Postcard': 'field_287' };
 
 // Maps to Total Interaction Statistic Report category and subcategory names in the report, not the actual names in knack
-const totalInteractionFields = {'Month/Year': 'field_375','Work Days Manual': 'field_454','Inbound Calls - Donation/Order': 'field_445','Inbound Calls - Finance': 'field_376','Inbound Calls - Free Offer Press 7': 'field_377','Inbound Calls - Front Desk Routed': 'field_446','Inbound Calls - Material Request': 'field_378','Inbound Calls - Ministry Expansion': 'field_379','Inbound Calls - Order/Donation': 'field_380','Inbound Calls - Other': 'field_381','Inbound Calls - Praise Report': 'field_382','Inbound Calls - Prayer': 'field_383','Inbound Calls - Prayer for Infilling of HS': 'field_384','Inbound Calls - Prayer for Salvation': 'field_385','Inbound Email - Free Offer': 'field_386','Inbound Email - Order Fulfillment': 'field_387','Inbound Email - Other': 'field_388','Inbound Email - Prayer': 'field_389','Inbound Email - prayer@deniserenner.org': 'field_390','Outbound Calls - Call from a Letter': 'field_391','Outbound Calls - Death in Family': 'field_392','Outbound Calls - Disaster': 'field_393','Outbound Calls - Faithful': 'field_394','Outbound Calls - Finance': 'field_395','Outbound Calls - Follow-up': 'field_396','Outbound Calls - Free Offer': 'field_397','Outbound Calls - Holiday': 'field_398','Outbound Calls - Lapsed': 'field_399','Outbound Calls - Large Donor': 'field_400','Outbound Calls - Meeting New Name': 'field_401','Outbound Calls - Ministry Expansion Project': 'field_402','Outbound Calls - New Partner': 'field_403','Outbound Calls - NNPPC (New Purchaser)': 'field_404','Outbound Calls - Orders/Donations (Voicemail response)': 'field_405','Outbound Calls - Other': 'field_406','Outbound Calls - Prayer': 'field_407','Outbound Calls - Reconnect/Reactivate Follow-up': 'field_408','Outbound Calls - Relief Project': 'field_409','Outbound Email - Call From Letter - email': 'field_410','Outbound Email - Disaster': 'field_411','Outbound Email - Faithful': 'field_412','Outbound Email - Finance': 'field_413','Outbound Email - Follow-up': 'field_414','Outbound Email - Holiday': 'field_415','Outbound Email - Lapsed': 'field_416','Outbound Email - Large Donor': 'field_417','Outbound Email - Ministry Expansion Project': 'field_418','Outbound Email - New Partners': 'field_419','Outbound Email - NNPPC (New Product Purchaser)': 'field_420','Outbound Email - Order Fulfillment': 'field_421','Outbound Email - Other': 'field_422','Outbound Email - Prayer@renner.org': 'field_423','Outbound Email - Reconnect': 'field_424','Outbound Email - Relief Project': 'field_425','Outbound Email - Response': 'field_426','Outbound Mail - Card': 'field_427','Outbound Mail - Follow-up': 'field_428','Outbound Mail - Mini Book': 'field_429','Outbound Mail - Ministry Expansion': 'field_430','Outbound Mail - Other': 'field_431','Outbound Mail - PC Prayer Only - Letter': 'field_432','Outbound Mail - PC w/ Gift': 'field_433','Outbound Mail - Postcard': 'field_434','Outbound Mail - Reconnect': 'field_444',' PDInbound Calls - Order Issue': 'field_435',' PDInbound Calls - Other': 'field_436','Inbound Calls Total': 'field_437','AverageInbound Calls per Day': 'field_457','Inbound Email Total': 'field_438','Outbound Calls Total': 'field_439','AverageOutbound Calls per Day': 'field_458','Outbound Email Total': 'field_440','AverageOutbound Email per Day': 'field_456','Outbound Mail Total': 'field_441','AverageOutbound Mail per Day': 'field_455','Total Responses': 'field_442','Average Total Responses per Day': 'field_459'};
+const totalInteractionFields = {'Month/Year': 'field_375','Work Days Manual': 'field_454','inbound calls - donation/order': 'field_445','inbound calls - finance': 'field_376','inbound calls - free offer press 7': 'field_377','inbound calls - front desk routed': 'field_446','inbound calls - material request': 'field_378','inbound calls - ministry expansion': 'field_379','inbound calls - order/donation': 'field_380','inbound calls - other': 'field_381','inbound calls - praise report': 'field_382','inbound calls - prayer': 'field_383','inbound calls - prayer for infilling of hs': 'field_384','inbound calls - prayer for salvation': 'field_385','inbound email - free offer': 'field_386','inbound email - order fulfillment': 'field_387','inbound email - other': 'field_388','inbound email - prayer': 'field_389','inbound email - prayer@deniserenner.org': 'field_390','outbound calls - call from a letter': 'field_391','outbound calls - death in family': 'field_392','outbound calls - disaster': 'field_393','outbound calls - faithful': 'field_394','outbound calls - finance': 'field_395','outbound calls - follow-up': 'field_396','outbound calls - free offer': 'field_397','outbound calls - holiday': 'field_398','outbound calls - lapsed': 'field_399','outbound calls - large donor': 'field_400','outbound calls - meeting new name': 'field_401','outbound calls - ministry expansion project': 'field_402','outbound calls - new partner': 'field_403','outbound calls - nnppc (new purchaser)': 'field_404','outbound calls - orders/donations (voicemail response)': 'field_405','outbound calls - other': 'field_406','outbound calls - prayer': 'field_407','outbound calls - reconnect/reactivate follow-up': 'field_408','outbound calls - relief project': 'field_409','outbound email - call from letter - email': 'field_410','outbound email - disaster': 'field_411','outbound email - faithful': 'field_412','outbound email - finance': 'field_413','outbound email - follow-up': 'field_414','outbound email - holiday': 'field_415','outbound email - lapsed': 'field_416','outbound email - large donor': 'field_417','outbound email - ministry expansion project': 'field_418','outbound email - new partners': 'field_419','outbound email - nnppc (new product purchaser)': 'field_420','outbound email - order fulfillment': 'field_421','outbound email - other': 'field_422','outbound email - prayer@renner.org': 'field_423','outbound email - reconnect': 'field_424','outbound email - relief project': 'field_425','outbound email - response': 'field_426','outbound mail - card': 'field_427','outbound mail - follow-up': 'field_428','outbound mail - mini book': 'field_429','outbound mail - ministry expansion': 'field_430','outbound mail - other': 'field_431','outbound mail - pc prayer only - letter': 'field_432','outbound mail - pc w/ gift': 'field_433','outbound mail - postcard': 'field_434','outbound mail - reconnect': 'field_444',' pdinbound calls - order issue': 'field_435',' pdinbound calls - other': 'field_436','inbound calls total': 'field_437','averageinbound calls per day': 'field_457','inbound email total': 'field_438','outbound calls total': 'field_439','averageoutbound calls per day': 'field_458','outbound email total': 'field_440','averageoutbound email per day': 'field_456','outbound mail total': 'field_441','averageoutbound mail per day': 'field_455','total responses': 'field_442','average total responses per day': 'field_459', 'digital outreach - auto-calls': 'field_512', 'digital outreach - video emails': 'field_513' };
+const totalInteractionHeaders = ['outbound mail', 'outbound email', 'inbound calls', 'outbound calls', 'digital outreach'];
+
+const callLoopFields = { 'Total': 'field_508', 'Source': 'field_519', 'Date/Time': 'field_505' };
+const bombbombFields = { 'Sent': 'field_515', 'Source': 'field_520', 'Date/Time': 'field_521' };
 
 // Maps to the columns in the TV Response Analysis Report, not the actual field names in knack
-const tvStatsFields = {'Broadcast Week': 'field_470','Air Date': 'field_471','# of Programs': 'field_472','Program Name': 'field_473','SG Downloaded': 'field_474','SG Sold': 'field_475',"Series Sold": 'field_476','Product Offer': 'field_477','Sold': 'field_478','Price': 'field_486','Price 2': 'field_498','Free Resource Offered': 'field_480','Free Resource Offered Text': 'field_497','Total Given Away': 'field_481','Ministry Stand up': 'field_482','Incoming Calls': 'field_483','Incoming Calls 2': 'field_496','Free Product Offer When Aired': 'field_484', 'Rerun of': 'field_494'};
+const tvStatFields = {'Broadcast Week': 'field_470','Air Date': 'field_471','# of Programs': 'field_472','Program Name': 'field_473','SG Downloaded': 'field_474','SG Sold': 'field_475',"Series Sold": 'field_476','Product Offer': 'field_477','Sold': 'field_478','Price': 'field_486','Price 2': 'field_498','Free Resource Offered': 'field_480','Free Resource Offered Text': 'field_497','Total Given Away': 'field_481','Ministry Stand up': 'field_482','Incoming Calls': 'field_483','Incoming Calls 2': 'field_496','Free Product Offer When Aired': 'field_484', 'Rerun of': 'field_494'};
 
 const RATE_LIMIT_DELAY_EVERY = 6; 
 const RATE_LIMIT_DELAY = 3150;
@@ -32,7 +36,8 @@ const RATE_LIMIT_DELAY = 3150;
 const API = {
 
     employeeIdMap: {},
-    tvResponseMaps: {},
+    programNameMap: {},
+    productOfferMap: {},
 
     getAllEmployees() { 
         return new Promise((resolve, reject) => {
@@ -85,12 +90,15 @@ const API = {
             alert('Current TV Responses did not load. Please load the page again if planning to upload a TV Response report.');
         }
 
-        let tvResponsesMap = {};
+        let programNameMap = {}, productOfferMap = {};
         for (let tvResponse of tvResponses) {
-            const productOfferName = String(tvResponse.field_477).toLowerCase();
-            tvResponsesMap[productOfferName] = tvResponse.id;
+            const programName = String(tvResponse[tvStatFields['Program Name']]).toLowerCase();
+            programNameMap[programName] = tvResponse.id;
+
+            const productOfferName = String(tvResponse[tvStatFields['Product Offer']]).toLowerCase();
+            productOfferMap[productOfferName] = tvResponse.id;
         }
-        return tvResponsesMap;
+        return [programNameMap, productOfferMap];
     },
 
     async uploadAgentInQueueReport(csvText, updateUICallback) {
@@ -162,30 +170,21 @@ const API = {
 
     async uploadTotalInteractionReport(xlsxArray, filename, updateUICallback) {
 
-        updateUICallback(null, null, `Parsing ${filename}`);
+        updateUICallback?.(null, `Parsing ${filename}`);
 
-        const requestQueue = [];
+        const requestQueue = [], callLoopQueue = [], bombbombQueue = [];
         const year = Number(filename.substring(0, 4));
 
         for (let column = 1; column < 13; column++) {
             let newRecord = {};
 
-            let category = 'Outbound Mail', workDays = null;
+            let category = null, workDays = null;
 
-            let skipRows = [1, 13, 14, 32, 33, 35, 41, 42, 44, 45];
-            let gapRows = [          15,     34,         43,    46], initialNumOfGaps = gapRows.length;
+            let skipRows = [1];
 
-            for (let rowWithGaps = 0; rowWithGaps <= 64 - initialNumOfGaps; rowWithGaps++) {
+            for (let row = 0, len = xlsxArray.length; row < len; row++) {
 
-                if (skipRows.includes(rowWithGaps)) continue;
-
-                if (gapRows[0] === rowWithGaps) {
-                    gapRows.shift();
-                    continue;
-                }
-
-                const gapsRemoved = initialNumOfGaps - gapRows.length;
-                const row = rowWithGaps - gapsRemoved;  // xlsxArray from SheetJS simply removes the gap rows
+                if (skipRows.includes(row)) continue;
                 
                 if (row === 0) { // month row
                     const firstOfMonth = new Date(`${String(xlsxArray[row][column]).trim()}, ${year}`);
@@ -193,6 +192,7 @@ const API = {
                     const lastOfMonth = new Date(firstOfMonth.getFullYear(), firstOfMonth.getMonth(), daysInMonth);
                     
                     newRecord[totalInteractionFields['Month/Year']] = createKnackToFromDateObject(firstOfMonth, lastOfMonth, false);
+                    continue;
                 }
 
                 if (row === 2) { // workdays row
@@ -204,28 +204,55 @@ const API = {
                     continue;
                 }
 
-                if ([3, 16, 36, 47].includes(rowWithGaps)) { // Category row
-                    category = xlsxArray[row][0];
+                if (totalInteractionHeaders.includes(String(xlsxArray[row][0]).toLowerCase())) {
+                    category = String(xlsxArray[row][0]).toLowerCase();
                     continue;
+                } else if (String(xlsxArray[row][0]).includes(`Total ${category}`)) {
+                    category = null;
                 }
 
+                if (category === null) continue;
+
                 // Subcategory row
-                const subcategory = xlsxArray[row][0];
-                const fieldName = ` ${category} - ${subcategory}`.trim();
+                const subcategory = String(xlsxArray[row][0]).toLowerCase();
+                const fieldName = `${category} - ${subcategory}`.trim();
                 const field = totalInteractionFields[fieldName];
 
                 newRecord[field] = xlsxArray[row][column];
             }
 
+            callLoopQueue.push({ 
+                url: '/.netlify/functions/create-record?type=CallLoopStatistic',
+                data: {
+                    [callLoopFields['Date/Time']]: newRecord[totalInteractionFields['Month/Year']],
+                    [callLoopFields['Total']]: newRecord[totalInteractionFields['digital outreach - auto-calls']],
+                    [callLoopFields['Source']]: 'Total Interaction Statistic Report'
+                }
+            });
+            bombbombQueue.push({
+                url: '/.netlify/functions/create-record?type=BombbombStatistic',
+                data: {
+                    [bombbombFields['Date/Time']]: newRecord[totalInteractionFields['Month/Year']],
+                    [bombbombFields['Sent']]: newRecord[totalInteractionFields['digital outreach - video emails']],
+                    [bombbombFields['Source']]: 'Total Interaction Statistic Report',
+                }
+            })
+            
             requestQueue.push({ url: `/.netlify/functions/create-record?type=TotalInteractionStatistic`, data: newRecord });
         }
 
         await postRequestsEvery(requestQueue, RATE_LIMIT_DELAY / RATE_LIMIT_DELAY_EVERY, updateUICallback);
+        
+        updateUICallback?.(`Sending Call Loop Statistic record requests.`, `Sending Call Loop Statistic record requests.`);
+        await postRequestsEvery(callLoopQueue, RATE_LIMIT_DELAY / RATE_LIMIT_DELAY_EVERY, updateUICallback);
+
+        updateUICallback?.(`Sending Bombbomb Statistic record requests.`, `Sending Bombbomb Statistic record requests.`);
+        await postRequestsEvery(bombbombQueue, RATE_LIMIT_DELAY / RATE_LIMIT_DELAY_EVERY, updateUICallback);
     },
     
     async uploadProgramResponseReport (xlsxArray, filename, updateUICallback) {
 
-        updateUICallback(null, null, `Parsing ${filename}`);
+        updateUICallback?.(null, `Parsing ${filename}`);
 
         const requestQueue = [], responses = [];
         const year = Number(filename.substring(0, 4));
@@ -238,18 +265,19 @@ const API = {
             
             for (let column = 0; column < headers.length; column++) {
 
-                let data = xlsxArray[row][column];
+                const data = xlsxArray[row][column];
+                const header = headers[column];
 
                 if (monthNames.includes(data)) break; // Skips rows with Month headers
-                if (String(data).trim() === 'n/a') continue;
+                if (String(data).trim() === 'n/a') continue; // Skips columns with 'n/a'
 
-                newRecord[tvStatsFields[headers[column]]] = ({
+                newRecord[tvStatFields[header]] = ({
                     'Broadcast Week': () => {
                         if (data !== null) {
-                            data = broadcastWeek = xlsxArray[row][column];
+                            return broadcastWeek = xlsxArray[row][column];
                         } else {
                             // Columns 0-6 will be empty and expect the same broadcast weeks and dates as before
-                            newRecord[tvStatsFields['Air Date']] = createKnackToFromDateObject(startDate, endDate, false);
+                            newRecord[tvStatFields['Air Date']] = createKnackToFromDateObject(startDate, endDate, false);
                             column = 6;
                             return broadcastWeek;
                         }
@@ -264,29 +292,32 @@ const API = {
                         
                         return createKnackToFromDateObject(startDate, endDate, false);
                     },
+                    'Program Name': () => {
+                        newRecord[tvStatFields['Rerun of']] = API.programNameMap[String(data).toLowerCase()]; // '~~~' placeholder, actual id, or undefined
+                        mapProgramName(data);
+                    },
                     'Product Offer': () => {
                         mapProductOffer(data);
-                        newRecord[tvStatsFields['Rerun of']] = API.tvResponseMaps[String(data).toLowerCase()]; // '~~~' or actual id
                     },
                     'Price': () => {
                         const slashValue = getValueAfterSlash(data);
                         if (slashValue) {
-                            newRecord[tvStatsFields['Price 2']] = slashValue;
+                            newRecord[tvStatFields['Price 2']] = slashValue;
                             return String(data).substring(0, String(data).indexOf(slashValue) - 1);
                         }
                     },
                     'Free Resource Offered': () => {
-                        newRecord[tvStatsFields['Free Resource Offered Text']] = data;
+                        newRecord[tvStatFields['Free Resource Offered Text']] = data;
                         mapProductOffer(data);
                     },
                     'Incoming Calls': () => {
                         const slashValue = getValueAfterSlash(data);
                         if (slashValue) {
-                            newRecord[tvStatsFields['Incoming Calls 2']] = slashValue;
+                            newRecord[tvStatFields['Incoming Calls 2']] = slashValue;
                             return String(data).substring(0, String(data).indexOf(slashValue) - 1);
                         }
                     }
-                })[headers[column]]?.() ?? data;
+                })[header]?.() ?? data;
 
             }
             
@@ -302,47 +333,67 @@ const API = {
             return (slashIndex !== -1) ? String(data).substring(slashIndex + 1) : null;
         }
 
-        function mapProductOffer(data) {
-            const productOfferId = API.tvResponseMaps[String(data).toLowerCase()];
+        function mapProductOffer(productOffer) {
+            const productOfferId = API.productOfferMap[String(productOffer).toLowerCase()];
             
+            // Placeholder for record id's not yet created; id stored in recordCallback below, and replaced in beforeRequestCallback below
             if (!productOfferId) {
-                // Placeholder for record id's not yet created in knack; id stored in recordCallback below, and replaced in beforeRequestCallback below
-                API.tvResponseMaps[String(data).toLowerCase()] = '~~~';
+                API.productOfferMap[String(productOffer).toLowerCase()] = '~~~';
             }
         }
 
-        const recordCallback = (recordIndex, totalRecordCount, message, response) => {
-            updateUICallback?.(recordIndex, totalRecordCount, message);
+        function mapProgramName(programName) {
+            const programNameId = API.programNameMap[String(programName).toLowerCase()];
+            
+            // Placeholder for record id's not yet created; id stored in recordCallback below, and replaced in beforeRequestCallback below
+            if (!programNameId) {
+                API.programNameMap[String(programName).toLowerCase()] = '~~~';
+            }
+        }
 
-            if (response?.data && !response?.data?.errors && API.tvResponseMaps[String(response.data.field_477).toLowerCase()] === '~~~') {
-                API.tvResponseMaps[String(response.data.field_477).toLowerCase()] = response.data.id;
+        // Wraps updateUICallback, and replaces '~~~' placeholders in API.productOfferMap and API.programNameMap after a record is successfully created
+        const responseCallback = (statusMessage, logMessage, response) => {
+
+            updateUICallback?.(statusMessage, logMessage, response);
+
+            if (response?.data && !response?.data?.errors) {
+                const recordCreated = response.data;
+
+                const productOffer = String(recordCreated[tvStatFields['Product Offer']]).toLowerCase();
+                if (API.productOfferMap[productOffer] === '~~~') {
+                    API.productOfferMap[productOffer] = recordCreated.id;
+                }
+
+                const programName = String(recordCreated[tvStatFields['Program Name']]).toLowerCase();
+                if (API.programNameMap[programName] === '~~~') {
+                    API.programNameMap[programName] = recordCreated.id;
+                }
             }
         }
 
         const beforeRequestCallback = (newRecord) => {
             // Replaces '~~~' placeholders with record ids for 'Rerun of' and 'Free Resource Offered' fields
-            if (newRecord[tvStatsFields['Rerun of']] === '~~~') {
-                const productOfferName = newRecord[tvStatsFields['Product Offer']];
-                replaceFieldWithOriginalProductOfferID(newRecord, tvStatsFields['Rerun of'], productOfferName);
-            }
-            if (newRecord[tvStatsFields['Free Resource Offered']]) {
-                const productOfferName = newRecord[tvStatsFields['Free Resource Offered']];
-                replaceFieldWithOriginalProductOfferID(newRecord, tvStatsFields['Free Resource Offered'], productOfferName);
+            if (newRecord[tvStatFields['Rerun of']] === '~~~') {
+                const programName = String(newRecord[tvStatFields['Program Name']]).toLowerCase();
+                const id = API.programNameMap[programName];
 
-                if (newRecord[tvStatsFields['Free Resource Offered']] === '~~~' // no product offer found
-                    && newRecord[tvStatsFields['Free Resource Offered']] === newRecord[tvStatsFields['Product Offer']]) { // same free offer as current
+                newRecord[tvStatFields['Rerun of']] = id;
+            }
+            if (newRecord[tvStatFields['Free Resource Offered']]) {
+                const productOfferName = String(newRecord[tvStatFields['Free Resource Offered']]).toLowerCase();
+                const id = API.productOfferMap[productOfferName];
+
+                newRecord[tvStatFields['Free Resource Offered']] = id;
+
+                if (newRecord[tvStatFields['Free Resource Offered']] === '~~~' // no product offer found
+                    && newRecord[tvStatFields['Free Resource Offered']] === newRecord[tvStatFields['Product Offer']]) { // same free offer as current
                     
-                    newRecord[tvStatsFields['Free Product Offer When Aired']] = true;
+                    newRecord[tvStatFields['Free Product Offer When Aired']] = true;
                 }
-            }
-
-            function replaceFieldWithOriginalProductOfferID(newRecord, field, productOfferName) {
-                const idOfOriginalRecord = API.tvResponseMaps[String(productOfferName).toLowerCase()];
-                newRecord[field] = idOfOriginalRecord;
             }
         }
 
-        await postRequestsEvery(requestQueue, null, recordCallback, true, beforeRequestCallback);
+        await postRequestsEvery(requestQueue, RATE_LIMIT_DELAY / RATE_LIMIT_DELAY_EVERY, responseCallback, true, beforeRequestCallback, true);
     },
 }
 
@@ -350,8 +401,8 @@ window.addEventListener("load", async () => {
     API.getAllEmployeeIds().then(map => {
         API.employeeIdMap = map;
     });
-    API.getAllTvResponseProductOffers().then(map => {
-        API.tvResponseMaps = map;
+    API.getAllTvResponseProductOffers().then(maps => {
+        [ API.programNameMap, API.productOfferMap ] = maps;
     });
 });
 
@@ -366,21 +417,22 @@ window.addEventListener("load", async () => {
  * @param {boolean} allMustSucceed If true, will stop sending requests when one fails, returning both failed and queued requests in an array within an error.
  * @returns 
  */
-async function postRequestsEvery(requestQueue, spacedMillis, updateUICallback, allMustSucceed, beforeRequestCallback) {
-    return await postRequests(requestQueue, spacedMillis, updateUICallback, allMustSucceed, beforeRequestCallback).catch((failedRequests) => {
+async function postRequestsEvery(requestQueue, spacedMillis, updateUICallback, allMustSucceed, beforeRequestCallback, mustWaitForPrev) {
+    return await postRequests(requestQueue, spacedMillis, updateUICallback, allMustSucceed, beforeRequestCallback, mustWaitForPrev).catch((failedRequests) => {
         // appendLogMessage(`<button type='button' id='retryRequests-${retryCount}'>Retry Failed Requests</button>`);
         const retryButton = document.createElement('button');
         retryButton.type = 'button';
         retryButton.innerHTML = 'Retry Failed Requests';
-        document.getElementById('logButtonContainer').appendChild(retryButton);
+        const logButtonContainer = document.getElementById('logButtonContainer');
+        logButtonContainer.innerHTML = '';
+        logButtonContainer.appendChild(retryButton);
 
         retryButton.addEventListener("click", async () => {
             retryButton.remove();
             await postRequestsEvery(failedRequests, spacedMillis, updateUICallback, allMustSucceed, beforeRequestCallback);
 
             // Status update
-            updateUICallback(null, null, 'Done!');
-            updateStatusBarMessage('Done!');
+            updateUICallback?.('Done!', 'Done!');
         });
     });
 }
@@ -395,9 +447,9 @@ async function postRequestsEvery(requestQueue, spacedMillis, updateUICallback, a
  * parameters. 
  * @returns 
  */
-async function postRequests(requestQueue, spacedMillis, updateUICallback, allMustSucceed, beforeRequestCallback) {
+async function postRequests(requestQueue, spacedMillis, updateUICallback, allMustSucceed, beforeRequestCallback, mustWaitForPrev) {
 
-    if (!Array.isArray(requestQueue)) {
+    if (!Array.isArray(requestQueue) || !requestQueue.every(val => val.hasOwnProperty('url') && val.hasOwnProperty('data'))) {
         throw new TypeError("The requestQueue must be an array of objects with 'url' and 'data' properties for sending POST requests.");
     } else if (requestQueue.length === 0) {
         return;
@@ -424,19 +476,22 @@ async function postRequests(requestQueue, spacedMillis, updateUICallback, allMus
 
             for (let { url, data } of requestList) {
                 const sendIndex = ++i;
-
                 try {
                     beforeRequestCallback?.(data);
                     await new Promise((resolve, reject) => {
-                        updateUICallback(sendIndex, requestQueue.length);
+                        
+                        updateUICallback?.(`Sending create record request (${sendIndex} of ${REQUESTS_COUNT})`);
+                        let pastTimeout = false, hasResponse = false;
 
                         axios.post(url, data).then(response => { // Successful send to netlify
+
+                            hasResponse = true;
 
                             // Error handling of knack from netlify
                             if (response?.data?.errors?.length) {
                                 console.log('knack error');
                                 for (let error of response.data.errors) {
-                                    updateUICallback(null, null, `Record request (${sendIndex} of ${REQUESTS_COUNT}) error: ${error?.message}`);
+                                    updateUICallback(null, `Record request (${sendIndex} of ${REQUESTS_COUNT}) error: ${error?.message}`, response);
                                 }
                                 
                                 reject({ url, data });
@@ -444,23 +499,27 @@ async function postRequests(requestQueue, spacedMillis, updateUICallback, allMus
                             }
 
                             responses.push(response);
-                            updateUICallback(null, null, `Record request (${sendIndex} of ${REQUESTS_COUNT}) successful.`, response);
+                            updateUICallback?.(null, `Record request (${sendIndex} of ${REQUESTS_COUNT}) successful.`, response);
 
-                            if (!spacedMillis) resolve(response);
+                            if (mustWaitForPrev && pastTimeout) resolve(response);
                         }).catch(response => {
-                            console.log('error response');
+
+                            hasResponse = true;
+
+                            console.log('error response', response);
 
                             if (response.status === 429 || response.status === 128) { // Rate limit or a strange permissions error
                                 resendRequests.push({ url, data });
                             } else {
-                                updateUICallback(null, null, `Could not send record request (${sendIndex} of ${REQUESTS_COUNT}): ${response.message}`, response);
+                                updateUICallback?.(null, `Could not send record request (${sendIndex} of ${REQUESTS_COUNT}): ${response.response.data}`, response);
                                 failed.push({ url, data });
                                 reject({ url, data });
                             }
                         });
 
-                        if (spacedMillis) setTimeout(() => {
-                            resolve();
+                        setTimeout(() => {
+                            pastTimeout = true;
+                            if (mustWaitForPrev && hasResponse) resolve();
                         }, spacedMillis);
                     });
                 } catch (failedRequest) {

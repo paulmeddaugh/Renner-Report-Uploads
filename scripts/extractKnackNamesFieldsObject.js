@@ -1,5 +1,6 @@
 // A code snippet (for inspector, Sources > 'Snippets' on far left. Save code in new snippet then right click > run) 
 // for the 'Records' section page in the knack builder. Logs a string for an object that maps all name keys to field values.
+// Must have at least one record
 
 let str = '{';
 

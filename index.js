@@ -1,8 +1,6 @@
 import API from './scripts/API.js';
 import { reformatAgentInQueueReport, reformatNoteStatisticReport } from './scripts/csvReformatting.js';
 import { transposeCsv, updateStatusBarMessage, getStatusBarMessage, getLogMessage, appendLogMessage, appendLogElement } from './scripts/utility.js';
-import axios from 'https://cdn.jsdelivr.net/npm/axios@1.4.0/+esm';
-// import * as XLSX from "xlsx";
 
 let uploading = false;
 
@@ -30,8 +28,8 @@ window.onload = async () => {
         async (file) => {
             let csvText = await file.text();
             const reformattedCsv = reformatAgentInQueueReport(csvText);
-            await API.uploadAgentInQueueReport(reformattedCsv, (recordIndex, totalRecordsToSend, message) => {
-                uploadStatus(recordIndex, totalRecordsToSend, message);
+            await API.uploadAgentInQueueReport(reformattedCsv, (statusMessage, logMessage, info) => {
+                uploadStatus(statusMessage, logMessage);
             });
         }
     )
@@ -43,8 +41,8 @@ window.onload = async () => {
             const csvText = await file.text();
             const transposedCsv = transposeCsv(csvText);
             const formattedContent = reformatNoteStatisticReport(transposedCsv);
-            await API.uploadNoteStatisticReport(formattedContent, (recordIndex, totalRecordsToSend, message) => {
-                uploadStatus(recordIndex, totalRecordsToSend, message);
+            await API.uploadNoteStatisticReport(formattedContent, (statusMessage, logMessage, info) => {
+                uploadStatus(statusMessage, logMessage);
             });
         }
     )
@@ -54,8 +52,8 @@ window.onload = async () => {
         totalStatsChooser, 
         async (file) => {
             const xlsxArr = await readXlsxFile(file);
-            await API.uploadTotalInteractionReport(xlsxArr, file.name, (recordIndex, totalRecordsToSend, message) => {
-                uploadStatus(recordIndex, totalRecordsToSend, message);
+            await API.uploadTotalInteractionReport(xlsxArr, file.name, (statusMessage, logMessage, info) => {
+                uploadStatus(statusMessage, logMessage);
             });
         }
     );
@@ -65,8 +63,8 @@ window.onload = async () => {
         tvStatsChooser,
         async (file) => {
             const xlsxArr = await readXlsxFile(file);
-            await API.uploadProgramResponseReport(xlsxArr, file.name, (recordIndex, totalRecordsToSend, message) => {
-                uploadStatus(recordIndex, totalRecordsToSend, message);
+            await API.uploadProgramResponseReport(xlsxArr, file.name, (statusMessage, logMessage, info) => {
+                uploadStatus(statusMessage, logMessage);
             });
         }
     )
@@ -108,8 +106,8 @@ function addUploadReportClickListener(submitButton, fileChooser, fileCallback) {
     }
 }
 
-function uploadStatus(recordIndex, totalRecordsToSend, logMessage) {
-    if (recordIndex && totalRecordsToSend) updateStatusBarMessage(`Sending create record request (${recordIndex} of ${totalRecordsToSend})`);
+function uploadStatus(statusMessage, logMessage) {
+    if (statusMessage) updateStatusBarMessage(statusMessage);
     if (logMessage) appendLogMessage(`${logMessage}`);
 }
 

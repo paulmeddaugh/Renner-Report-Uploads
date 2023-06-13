@@ -73,6 +73,11 @@ h1 {
     border-bottom: 1px solid dodgerblue;
 }
 
+.helpIcon .tooltip ul {
+    padding-left: 35px;
+    margin: 0;
+}
+
 button {
     transition: .5s ease;
     background-color: buttonface;
