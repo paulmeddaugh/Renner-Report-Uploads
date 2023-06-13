@@ -10,10 +10,10 @@ const handler = async (event) => {
         }
     }
 
-    let code;
+    let code, client_id;
 
     try {
-        ({ code } = event.body);
+        ({ code, client_id } = event.body);
     
         console.log('running', code);
     } catch (error) {
@@ -23,7 +23,7 @@ const handler = async (event) => {
     const headers = { 'Content-Type': 'application/json' };
     const postData = {
       "grant_type": "authorization_code",
-      "client_id": process.env.BID,
+      "client_id": client_id,
       "client_secret": process.env.BSECRET,
       "code": code,
     };
