@@ -1,5 +1,6 @@
 // Docs on event and context https://docs.netlify.com/functions/build/#code-your-function-2
 
+//localhost:8888/.netlify/functions/get-bombbomb-access-token
 const handler = async (event) => {
 
     if (event.httpMethod !== 'POST') {
@@ -11,16 +12,15 @@ const handler = async (event) => {
     }
 
     let code, client_id;
-
-    try {
-        ({ code, client_id } = event.body);
     
-        console.log('running', code);
+    try {
+        ({ code, client_id } = JSON.parse(event.body));
+        console.log('client_id', client_id);
     } catch (error) {
         return { statusCode: 400, body: error.toString() }
     }
     
-    const headers = { 'Content-Type': 'application/json' };
+    const headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' };
     const postData = {
       "grant_type": "authorization_code",
       "client_id": client_id,
@@ -29,12 +29,12 @@ const handler = async (event) => {
     };
     
     try {
-      const response = await fetch('https://app.bombbomb.com/auth/access_token', { method: 'POST', body: JSON.stringify(postData), headers, redirect: 'follow' });
+      const response = await fetch('https://app.bombbomb.com/auth/access_token', { method: 'POST', body: JSON.stringify(postData), headers });
       const text = await response.text();
 
       return { statusCode: 200, body: text };
+
     } catch (error) {
-      console.log(error.status, error.error);
       return { statusCode: 500, body: error.toString() };
     }
 }
