@@ -393,7 +393,7 @@ const API = {
             }
         }
 
-        await postRequestsEvery(requestQueue, RATE_LIMIT_DELAY / RATE_LIMIT_DELAY_EVERY, responseCallback, true, beforeRequestCallback, true);
+        await postRequestsEvery(requestQueue, null, responseCallback, true, beforeRequestCallback);
     },
 }
 
@@ -501,7 +501,7 @@ async function postRequests(requestQueue, spacedMillis, updateUICallback, allMus
                             responses.push(response);
                             updateUICallback?.(null, `Record request (${sendIndex} of ${REQUESTS_COUNT}) successful.`, response);
 
-                            if (mustWaitForPrev && pastTimeout) resolve(response);
+                            if ((mustWaitForPrev && pastTimeout) || !spacedMillis) resolve(response);
                         }).catch(response => {
 
                             hasResponse = true;
@@ -519,7 +519,7 @@ async function postRequests(requestQueue, spacedMillis, updateUICallback, allMus
 
                         setTimeout(() => {
                             pastTimeout = true;
-                            if (!mustWaitForPrev || (mustWaitForPrev && hasResponse)) resolve();
+                            if (spacedMillis && (mustWaitForPrev && hasResponse)) resolve();
                         }, spacedMillis);
                     });
                 } catch (failedRequest) {
