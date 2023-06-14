@@ -393,7 +393,7 @@ const API = {
             }
         }
 
-        await postRequestsEvery(requestQueue, null, responseCallback, true, beforeRequestCallback);
+        await postRequestsEvery(requestQueue, RATE_LIMIT_DELAY / RATE_LIMIT_DELAY_EVERY, responseCallback, true, beforeRequestCallback, true);
     },
 }
 
