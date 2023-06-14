@@ -519,7 +519,7 @@ async function postRequests(requestQueue, spacedMillis, updateUICallback, allMus
 
                         setTimeout(() => {
                             pastTimeout = true;
-                            if (mustWaitForPrev && hasResponse) resolve();
+                            if (!mustWaitForPrev || (mustWaitForPrev && hasResponse)) resolve();
                         }, spacedMillis);
                     });
                 } catch (failedRequest) {

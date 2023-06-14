@@ -6,7 +6,7 @@ const basicHeaders = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS'
 };
 
-//localhost:8888/.netlify/functions/get-bombbomb-access-token
+//localhost:8888/.netlify/functions/access-bombbomb-resources
 const handler = async (event) => {
 
     if (event.httpMethod !== 'POST' && event.httpMethod !== 'OPTIONS') {
@@ -27,7 +27,7 @@ const handler = async (event) => {
         ({ code, client_id } = JSON.parse(event.body));
         console.log('client_id', client_id);
     } catch (error) {
-        return { statusCode: 400, body: error.toString() }
+        return { statusCode: 400, body: { message: "No code or client id found." }, headers: { ...basicHeaders, 'Content-Type': 'application/json'} }
     }
     
     const headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' };
@@ -42,10 +42,10 @@ const handler = async (event) => {
       const response = await fetch('https://app.bombbomb.com/auth/access_token', { method: 'POST', body: JSON.stringify(postData), headers });
       const text = await response.text();
 
-      return { statusCode: 200, body: text, headers: { ...basicHeaders, 'Content-Type': 'application/json'} };
+      return { statusCode: 200, body: text, headers: { ...basicHeaders, 'Content-Type': 'application/json' } };
 
     } catch (error) {
-      return { statusCode: 500, body: error.toString(), headers: { 'Content-Type': 'text/plain', ...basicHeaders } };
+      return { statusCode: 500, body: error.toString(), headers: { ...basicHeaders, 'Content-Type': 'text/plain' } };
     }
 }
 
