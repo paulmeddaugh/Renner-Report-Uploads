@@ -1,6 +1,6 @@
 import API from './scripts/API.js';
 import { reformatAgentInQueueReport, reformatNoteStatisticReport } from './scripts/csvReformatting.js';
-import { transposeCsv, updateStatusBarMessage, getStatusBarMessage, getLogMessage, appendLogMessage, appendLogElement } from './scripts/utility.js';
+import { transposeCsv, updateStatusBarMessage, appendLogMessage } from './scripts/utility.js';
 
 let uploading = false, userLoggedIn = false, loggedInLoadResult = null;
 
@@ -80,7 +80,7 @@ window.onload = async () => {
                 if (node?.id === 'view_89') { // no user logged in
                     setLoggedIn(false);
                 }
-                if (node?.id === 'view_164') { // user logged in
+                if (node?.id === 'view_164' || node?.id === 'view_144') { // user logged in as admin
                     setLoggedIn(true);
                 }
             }
@@ -92,14 +92,14 @@ window.onload = async () => {
     // Checks if user is initially logged in or out
     const observer2 = new MutationObserver((mutationList, observer) => {
         for (const mutation of mutationList) {
-            if (loggedInLoadResult === null) {
-                loggedInLoadResult = false;
-            } else if (!loggedInLoadResult) {
-                if (document.getElementById('view_89')) {
-                    setLoggedIn(false);
-                }
-                loggedInLoadResult = true;
+
+            if (loggedInLoadResult === false // second time changing loading spinner style
+                && document.getElementById('view_89')) { // log in view
+                
+                setLoggedIn(false);
             }
+
+            if (!loggedInLoadResult) loggedInLoadResult = (loggedInLoadResult === null) ? false : true;
         }
     });
 
