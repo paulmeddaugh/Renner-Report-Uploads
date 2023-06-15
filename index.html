@@ -4,26 +4,26 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="./resources/icons/favicon.ico">
-    <title>Renner Ministries Report Uploads</title>
+    <link rel="icon" href="./src/resources/icons/favicon.ico">
+    <title>Partner Care - Report Uploads</title>
     <script src="https://unpkg.com/read-excel-file@4.x/bundle/read-excel-file.min.js"></script>
-    <script type="module" src="./index.js"></script>
+    <script type="module" src="./dist/main.js"></script>
     <script type="text/javascript">app_id="6303cfdae045d500211ad909";distribution_key="dist_2";</script><script type="text/javascript" src="https://loader.knack.com/6303cfdae045d500211ad909/dist_2/knack.js"></script>
-    <link rel="stylesheet" href="./styles/index.css" /> 
+    <link rel="stylesheet" href="./src/styles/index.css" /> 
   </head>
   <body>
     <div id="knack-dist_2">Loading...</div>
-    <main>
+    <main style="height: 0; overflow: hidden;"> <!-- Changes if logged in -->
         <h1 id="pageTitle">Report Uploads</h1>
         <div id="inputContainer">
             <div class="statistics">
                 <div class="inputRow">
                     <input type="file" id="agentInQueueFile" class="fileChooser"  accept=".csv" />
                     <button id="agentInQueueSubmit" type="button">Upload Agent In Queue Report</button>
-                    <span class="helpIcon" src="./resources/help-155-48.png" alt="formatting">
+                    <span class="helpIcon" src="./src/resources/help-155-48.png" alt="formatting">
                         <div class="tooltip">
                             <ul>
-                                <li>Must have same column and row format as <a href="./resources/sampleFiles/Agent in queue stats template.csv">this</a> file.</li>
+                                <li>Must have same column and row format as <a href="./src/resources/sampleFiles/Agent in queue stats template.csv">this</a> file.</li>
                                 <li>The third row, second column must have the date of the report in the format of "mm/dd/yyyy [time] To mm/dd/yyyy [time]".</li>
                             </ul>
                         </div>
@@ -32,10 +32,10 @@
                 <div class="inputRow">
                     <input type="file" id="noteStatsFile" class="fileChooser"  accept=".csv">
                     <button id="noteStatsSubmit" type="button">Upload Note Statistic Report</button>
-                    <span class="helpIcon" src="./resources/help-155-48.png" alt="formatting">
+                    <span class="helpIcon" src="./src/resources/help-155-48.png" alt="formatting">
                         <div class="tooltip">
                             <ul>
-                                <li>Must have same column and row format as <a href="./resources/sampleFiles/Note Type Stats template.csv">this</a> file.</li>
+                                <li>Must have same column and row format as <a href="./src/resources/sampleFiles/Note Type Stats template.csv">this</a> file.</li>
                                 <li>Must have employee names as the column headers from the third column on, in the format of "[first letter of first name][last name]".</li>
                             </ul>
                         </div>
@@ -44,10 +44,10 @@
                 <div class="inputRow">
                     <input type="file" id="totalStatsFile" class="fileChooser"  accept=".xlsx" />
                     <button id="totalStatsSubmit" type="button">Upload Total Interaction Report</button>
-                    <span class="helpIcon" src="./resources/help-155-48.png" alt="formatting">
+                    <span class="helpIcon" src="./src/resources/help-155-48.png" alt="formatting">
                         <div class="tooltip">
                             <ul>
-                                <li>Must have the same format as <a href="./resources/sampleFiles/2022 PC Interactions Report Final template.xlsx">this</a> file.</li>
+                                <li>Must have the same format as <a href="./src/resources/sampleFiles/2022 PC Interactions Report Final template.xlsx">this</a> file.</li>
                                 <li>Must have the report year as the first four digits of the file name.</li>
                                 <li>The second row must have the number of work days in the month followed by a space, and a "([number] actual)" phrase if that number is overridden.</li>
                                 <li>The algorithm picks up all rows after a row with the category name in the first column till a row with a "Total [category name]" label in the first column, excluding "Digital Outreach".</li>
@@ -60,10 +60,10 @@
                 <div class="inputRow">
                     <input type="file" id="tvStatsFile" class="fileChooser"  accept=".xlsx">
                     <button id="tvStatsSubmit" type="button">Upload Program Response Report</button>
-                    <span class="helpIcon" src="./resources/help-155-48.png" alt="formatting">
+                    <span class="helpIcon" src="./src/resources/help-155-48.png" alt="formatting">
                         <div class="tooltip">
                             <ul>
-                                <li>Must have same column and row format as <a href="./resources/sampleFiles/2022 Program Response Analysis template.xlsx">this</a> file.</li>
+                                <li>Must have same column and row format as <a href="./src/resources/sampleFiles/2022 Program Response Analysis template.xlsx">this</a> file.</li>
                                 <li>Must have the report year as the first four digits of the file name.</li>
                             </ul>
                         </div>
@@ -72,10 +72,10 @@
             </div>
             <div class="linkRow">
                 <button id="callLoopStatsButton" type="button" href="https://docs.google.com/spreadsheets/d/1wXGkn76QgheiKrvggEoZS_QViF5Lx2P1sdyVz6RGX54/edit#gid=0">
-                    <img src="./resources/icons/callLoopIcon.ico">
+                    <img src="./src/resources/icons/callLoopIcon.ico">
                     Upload Call Loop Dashboard Data
                 </button>
-                <span class="helpIcon" src="./resources/help-155-48.png" alt="formatting">
+                <span class="helpIcon" src="./src/resources/help-155-48.png" alt="formatting">
                     <div class="tooltip">
                         <ul>
                             <li>Copy entire dashboard on the Call Loop website.</li>

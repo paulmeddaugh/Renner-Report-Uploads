@@ -1,8 +1,12 @@
 {
   "devDependencies": {
-    "netlify-cli": "^15.1.1"
+    "netlify-cli": "^15.1.1",
+    "webpack-cli": "^5.1.4"
   },
   "scripts": {
     "netlify": "./node_modules/.bin/netlify"
+  },
+  "dependencies": {
+    "axios": "^1.4.0"
   }
 }

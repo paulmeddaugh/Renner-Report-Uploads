@@ -151,7 +151,7 @@ button {
     width: 100%;
 }
 
-.kn-scenes.kn-section .kn-scene .view-group-1, .kn-scenes.kn-section .kn-scene .view-group-2, #view_89 {
+.kn-scenes.kn-section .kn-scene .view-group-1, .kn-scenes.kn-section .kn-scene .view-group-2 {
     display: none;
 }
 

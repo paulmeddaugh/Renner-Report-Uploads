@@ -2,7 +2,7 @@ import API from './scripts/API.js';
 import { reformatAgentInQueueReport, reformatNoteStatisticReport } from './scripts/csvReformatting.js';
 import { transposeCsv, updateStatusBarMessage, getStatusBarMessage, getLogMessage, appendLogMessage, appendLogElement } from './scripts/utility.js';
 
-let uploading = false;
+let uploading = false, userLoggedIn = false, loggedInLoadResult = null;
 
 window.onload = async () => {
 
@@ -72,6 +72,39 @@ window.onload = async () => {
     document.getElementById('callLoopStatsButton').onclick = (e) => {
         window.open(e.target.getAttribute('href'), '_blank');
     }
+
+    // Checks if user logs out or in
+    const observer = new MutationObserver((mutationList, observer) => {
+        for (const mutation of mutationList) {
+            if (mutation.addedNodes?.length) for (let node of mutation.addedNodes) {
+                if (node?.id === 'view_89') { // no user logged in
+                    setLoggedIn(false);
+                }
+                if (node?.id === 'view_164') { // user logged in
+                    setLoggedIn(true);
+                }
+            }
+        }
+    });
+    const targetNode = document.getElementById("knack-dist_2");
+    observer.observe(targetNode, { attributes: true, childList: true, subtree: true });
+
+    // Checks if user is initially logged in or out
+    const observer2 = new MutationObserver((mutationList, observer) => {
+        for (const mutation of mutationList) {
+            if (loggedInLoadResult === null) {
+                loggedInLoadResult = false;
+            } else if (!loggedInLoadResult) {
+                if (document.getElementById('view_89')) {
+                    setLoggedIn(false);
+                }
+                loggedInLoadResult = true;
+            }
+        }
+    });
+
+    // Start observing the target node for configured mutations
+    observer2.observe(targetNode, { attributes: true, subtree: true });
 };
 
 /**
@@ -85,6 +118,10 @@ function addUploadReportClickListener(submitButton, fileChooser, fileCallback) {
     submitButton.onclick = async (e) => {
 
         if (uploadInProgress(e.target)) return;
+
+        if (!userLoggedIn) {
+            alert('Must be logged in to Partner Care to upload a report.');
+        }
 
         if (fileChooser.files.length === 0) {
             const reportTypeName = ({
@@ -129,4 +166,14 @@ function showFinishedUI(fileChooser) {
     updateStatusBarMessage('Done!');
     appendLogMessage('Done!');
     uploading = false;
+}
+
+function setLoggedIn(loggedIn) {
+
+    if (loggedIn === userLoggedIn) return;
+
+    userLoggedIn = loggedIn;
+    const main = document.getElementsByTagName('main')[0];
+    main.style.height = (loggedIn) ? 'auto' : '0';
+    main.style.overflow = (loggedIn) ? 'unset' : 'hidden';
 }

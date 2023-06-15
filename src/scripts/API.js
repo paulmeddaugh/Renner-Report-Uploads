@@ -1,5 +1,5 @@
-import axios from 'https://cdn.jsdelivr.net/npm/axios@1.4.0/+esm';
-import { getNextLineIndex, updateStatusBarMessage, appendLogMessage, appendLogElement, getKnackDateString } from './utility.js';
+import axios from 'axios';
+import { getNextLineIndex } from './utility.js';
 
 const agentInQueueFields = { // Call Statistics
     "Agent Extension": "field_318",
@@ -383,11 +383,9 @@ const API = {
                 const productOfferName = String(newRecord[tvStatFields['Free Resource Offered']]).toLowerCase();
                 const id = API.productOfferMap[productOfferName];
 
-                newRecord[tvStatFields['Free Resource Offered']] = id;
-
-                if (newRecord[tvStatFields['Free Resource Offered']] === '~~~' // no product offer found
-                    && newRecord[tvStatFields['Free Resource Offered']] === newRecord[tvStatFields['Product Offer']]) { // same free offer as current
-                    
+                if (!newRecord[tvStatFields['Free Resource Offered']] === newRecord[tvStatFields['Product Offer']]) {
+                    newRecord[tvStatFields['Free Resource Offered']] = id;
+                } else {
                     newRecord[tvStatFields['Free Product Offer When Aired']] = true;
                 }
             }
