@@ -1,0 +1,3 @@
+# Partner Care Report Uploads
+
+A page for parsing and uploading reports into the Partner Care Renner Ministries project. The record creation requests bounce first to a Netlify serverless function for hiding the Knack project's API secret. This page also has a serverless function that is used as a proxy around a CORS error for getting access to resources from the Bombbomb API in the Knack project. It additionally gets an embedded script of the knack project's 'Dashboard' page for displaying header and login information to make the page feel cohesive to the knack project. This embedded script is also used to determine if the user has access to the page content.

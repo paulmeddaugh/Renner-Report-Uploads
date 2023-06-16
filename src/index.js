@@ -80,7 +80,7 @@ window.onload = async () => {
                 if (node?.id === 'view_89') { // no user logged in
                     setLoggedIn(false);
                 }
-                if (node?.id === 'view_164' || node?.id === 'view_144') { // user logged in as admin
+                if (node?.id === 'view_274' || node?.id === 'view_144') { // user logged in as admin
                     setLoggedIn(true);
                 }
             }
