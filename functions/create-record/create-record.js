@@ -7,13 +7,14 @@ const basicReturnHeaders = {
 };
 
 const knackHeaders = {
-  'X-Knack-Application-Id': process.env.KID,
+  /* Id received as a request parameter: increases security, adds more environment variable space in Netlify for development, is already needed by 'Report Uploads' page */
+  'X-Knack-Application-Id': null,
   'X-Knack-REST-API-Key': process.env.KKEY,
   'Content-Type': 'application/json'
 }
 
 //localhost:8888/.netlify/functions/create-record
-// 'type' param with options of 'CallStatistic', 'NoteStatistic', 'TotalInteractionStatistic', and 'TVResponse'
+// 'type' param with options of 'CallStatistic', 'NoteStatistic', 'TotalInteractionStatistic', 'TVResponse', 'CallLoopStatistic', and 'BombbombStatistic'
 const handler = async (event) => {
 
   if (event.httpMethod !== 'POST' && event.httpMethod !== 'OPTIONS') {
@@ -32,7 +33,7 @@ const handler = async (event) => {
 
   try {
     ({ body: newRecord } = event);
-    ({ type } = event.queryStringParameters);
+    ({ knackAppId, type } = event.queryStringParameters);
 
     url = ({
       'CallStatistic': 'https://api.knack.com/v1/objects/object_29/records',
@@ -41,7 +42,13 @@ const handler = async (event) => {
       'TVResponse': 'https://api.knack.com/v1/objects/object_34/records',
       'CallLoopStatistic': 'https://api.knack.com/v1/objects/object_36/records',
       'BombbombStatistic': 'https://api.knack.com/v1/objects/object_37/records',
-    })[type] ?? '';
+    })[type];
+
+    knackHeaders['X-Knack-Application-Id'] = knackAppId;
+
+    if (!url) {
+      throw new Error(`No type '${type}' found.`);
+    }
 
   } catch (error) {
     return { statusCode: 400, body: error.toString(), headers: basicReturnHeaders };

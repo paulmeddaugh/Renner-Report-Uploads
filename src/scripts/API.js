@@ -33,6 +33,8 @@ const tvStatFields = {'Broadcast Week': 'field_470','Air Date': 'field_471','# o
 const RATE_LIMIT_DELAY_EVERY = 6; 
 const RATE_LIMIT_DELAY = 3150;
 
+const knackAppId = app_id; // In a script just above ./src/dist/main.js script in index.html, gotten when copying the knack project's embedded script
+
 const API = {
 
     employeeIdMap: {},
@@ -41,7 +43,7 @@ const API = {
 
     getAllEmployees() { 
         return new Promise((resolve, reject) => {
-            axios.get('/.netlify/functions/get-records?type=employees').then((response) => {
+            axios.get(`/.netlify/functions/get-records?type=employees&knackAppId=${knackAppId}`).then((response) => {
                 resolve(response.data.records);
             }).catch((response) => {
                 reject(`${response.data?.message}\n${response.data?.status}`);
@@ -79,7 +81,7 @@ const API = {
 
     async getAllTvResponseProductOffers() {
         const tvResponses = await new Promise((resolve, reject) => {
-            axios.get('/.netlify/functions/get-records?type=tvResponses').then((response) => {
+            axios.get(`/.netlify/functions/get-records?type=tvResponses&knackAppId=${knackAppId}`).then((response) => {
                 resolve(response.data.records);
             }).catch((response) => {
                 reject(`${response.data?.message}\n${response.data?.status}`);
@@ -160,7 +162,7 @@ const API = {
             })[type];
 
             requestQueue.push({
-                url: `/.netlify/functions/create-record?type=${netlifyType}`,
+                url: `/.netlify/functions/create-record?type=${netlifyType}&knackAppId=${knackAppId}`,
                 data: JSON.stringify(newRecordObject)
             });
         }
@@ -222,7 +224,7 @@ const API = {
             }
 
             callLoopQueue.push({ 
-                url: '/.netlify/functions/create-record?type=CallLoopStatistic',
+                url: `/.netlify/functions/create-record?type=CallLoopStatistic&knackAppId=${knackAppId}`,
                 data: {
                     [callLoopFields['Date/Time']]: newRecord[totalInteractionFields['Month/Year']],
                     [callLoopFields['Total']]: newRecord[totalInteractionFields['digital outreach - auto-calls']],
@@ -230,7 +232,7 @@ const API = {
                 }
             });
             bombbombQueue.push({
-                url: '/.netlify/functions/create-record?type=BombbombStatistic',
+                url: `/.netlify/functions/create-record?type=BombbombStatistic&knackAppId=${knackAppId}`,
                 data: {
                     [bombbombFields['Date/Time']]: newRecord[totalInteractionFields['Month/Year']],
                     [bombbombFields['Sent']]: newRecord[totalInteractionFields['digital outreach - video emails']],
@@ -238,7 +240,7 @@ const API = {
                 }
             })
             
-            requestQueue.push({ url: `/.netlify/functions/create-record?type=TotalInteractionStatistic`, data: newRecord });
+            requestQueue.push({ url: `/.netlify/functions/create-record?type=TotalInteractionStatistic&knackAppId=${knackAppId}`, data: newRecord });
         }
 
         await postRequestsEvery(requestQueue, RATE_LIMIT_DELAY / RATE_LIMIT_DELAY_EVERY, updateUICallback);
@@ -323,7 +325,7 @@ const API = {
             
             if (!Object.keys(newRecord).length) continue;
             
-            requestQueue.push({ url: `/.netlify/functions/create-record?type=TVResponse`, data: newRecord });
+            requestQueue.push({ url: `/.netlify/functions/create-record?type=TVResponse&knackAppId=${knackAppId}`, data: newRecord });
         }
 
         function getValueAfterSlash(data) {

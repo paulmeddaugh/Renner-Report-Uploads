@@ -69,10 +69,6 @@ window.onload = async () => {
         }
     )
 
-    document.getElementById('callLoopStatsButton').onclick = (e) => {
-        window.open(e.target.getAttribute('href'), '_blank');
-    }
-
     // Checks if user logs out or in
     const observer = new MutationObserver((mutationList, observer) => {
         for (const mutation of mutationList) {

@@ -1,16 +1,13 @@
 // Docs on event and context https://docs.netlify.com/functions/build/#code-your-function-2
   
-const basicHeaders = {
-    'X-Knack-Application-Id': process.env.KID,
+const knackHeaders = {
+    /* Id received as a request parameter: increases security, adds more environment variable space in Netlify for development, is already needed by 'Report Uploads' page */
+    'X-Knack-Application-Id': null,
     'X-Knack-REST-API-Key': process.env.KKEY,
-}
-
-const headers = {
-    ...basicHeaders,
     'Content-Type': 'application/json'
 }
 
-//localhost:8888/.netlify/functions/get-call-stat-queues
+//localhost:8888/.netlify/functions/get-records
 const handler = async (event) => {
 
     if (event.httpMethod !== 'GET') {
@@ -22,15 +19,17 @@ const handler = async (event) => {
     }
 
     try {
-        const { type } = event.queryStringParameters;
+        const { knackAppId, type } = event.queryStringParameters;
 
         const url = ({
             'employees': 'https://api.knack.com/v1/objects/object_7/records',
             'tvResponses': 'https://api.knack.com/v1/objects/object_34/records'
         })[type];
 
+        knackHeaders['X-Knack-Application-Id'] = knackAppId;
+
         let knackResponse;
-        await fetch(url, { method: 'GET', headers }).then(async response => {
+        await fetch(url, { method: 'GET', headers: knackHeaders }).then(async response => {
             knackResponse = await response.json();
         }).catch(async response => {
             knackResponse = await response.json();
