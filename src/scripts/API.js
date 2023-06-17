@@ -460,7 +460,7 @@ async function postRequests(requestQueue, spacedMillis, updateUICallback, allMus
         do {
             [requestQueue, batchFailedRequests] = await postRequestListWithDelay(requestQueue, spacedMillis, updateUICallback);
             failedRequests = failedRequests.concat(batchFailedRequests);
-        } while (requestQueue.length !== 0)
+        } while (requestQueue.length !== 0);
 
         /**
          * Sends all requests every spacedMillis, and calls the updateUICallback for every request sent. 
@@ -505,8 +505,6 @@ async function postRequests(requestQueue, spacedMillis, updateUICallback, allMus
 
                             hasResponse = true;
 
-                            console.log('error response', response);
-
                             if (response.status === 429 || response.status === 128) { // Rate limit or a strange permissions error
                                 resendRequests.push({ url, data });
                             } else {
@@ -518,7 +516,7 @@ async function postRequests(requestQueue, spacedMillis, updateUICallback, allMus
 
                         setTimeout(() => {
                             pastTimeout = true;
-                            if (spacedMillis && (mustWaitForPrev && hasResponse)) resolve();
+                            if ((spacedMillis && mustWaitForPrev && hasResponse) || (spacedMillis && !mustWaitForPrev)) resolve();
                         }, spacedMillis);
                     });
                 } catch (failedRequest) {

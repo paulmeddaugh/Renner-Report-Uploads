@@ -62,7 +62,7 @@ const handler = async (event) => {
       try {
         JSON.parse(knackResponse).id;
       } catch (error) {
-        throw new Error(`Request failed: ${knackResponse}`);
+        throw new Error(knackResponse);
       }
     });
 
