@@ -7,6 +7,10 @@ const knackHeaders = {
     'Content-Type': 'application/json'
 }
 
+const contentType = {
+    'Content-Type': 'application/json'
+}
+
 //localhost:8888/.netlify/functions/get-records
 const handler = async (event) => {
 
@@ -18,26 +22,44 @@ const handler = async (event) => {
         }
     }
 
+    // Correct parameter testing
+    let url;
     try {
         const { knackAppId, type } = event.queryStringParameters;
-
-        const url = ({
+    
+        url = ({
             'employees': 'https://api.knack.com/v1/objects/object_7/records',
             'tvResponses': 'https://api.knack.com/v1/objects/object_34/records'
         })[type];
-
+    
         knackHeaders['X-Knack-Application-Id'] = knackAppId;
+        
+        if (!url) {
+            throw new Error(`No type '${type}' found.`);
+          } else if (!knackAppId) {
+            throw new Error(`No knack app id provided: ${knackAppId}`);
+          }
+    } catch (error) {
+        return { statusCode: 400, body: JSON.stringify({ message: error.toString() }), headers: contentType };
+      }
+
+    // Actual knack request
+    try {
+        console.log('knack key', knackHeaders['X-Knack-REST-API-Key']);
 
         let knackResponse;
         await fetch(url, { method: 'GET', headers: knackHeaders }).then(async response => {
-            knackResponse = await response.json();
-        }).catch(async response => {
-            knackResponse = await response.json();
+            knackResponse = await response?.text();
+            try {
+                JSON.parse(knackResponse).id;
+            } catch (error) {
+                throw new Error(`Request failed: ${knackResponse}`);
+            }
         });
 
-        return { statusCode: 200, body: JSON.stringify(knackResponse) };
+        return { statusCode: 200, body: knackResponse, headers: contentType };
     } catch (error) {
-        return { statusCode: 500, body: error.toString() };
+        return { statusCode: 500, body: JSON.stringify({ message: error.toString() }), headers: contentType };
     }
 
 // try {

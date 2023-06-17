@@ -48,17 +48,22 @@ const handler = async (event) => {
 
     if (!url) {
       throw new Error(`No type '${type}' found.`);
+    } else if (!knackAppId) {
+      throw new Error(`No knack app id provided: ${knackAppId}`);
     }
-
   } catch (error) {
-    return { statusCode: 400, body: error.toString(), headers: basicReturnHeaders };
+    return { statusCode: 400, body: error.toString(), headers: { ...basicReturnHeaders, 'Content-Type': 'text/plain' } };
   }
 
   try {
-
     let knackResponse;
     await fetch(url, { method: 'POST', headers: knackHeaders, body: newRecord }).then(async response => {
       knackResponse = await response?.text();
+      try {
+        JSON.parse(knackResponse).id;
+      } catch (error) {
+        throw new Error(`Request failed: ${knackResponse}`);
+      }
     });
 
     return { statusCode: 200, body: knackResponse, headers: basicReturnHeaders };

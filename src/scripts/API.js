@@ -41,26 +41,21 @@ const API = {
     programNameMap: {},
     productOfferMap: {},
 
-    getAllEmployees() { 
-        return new Promise((resolve, reject) => {
+    async getAllEmployeeIds() {
+        let error = null;
+        const employees = await new Promise((resolve, reject) => {
             axios.get(`/.netlify/functions/get-records?type=employees&knackAppId=${knackAppId}`).then((response) => {
                 resolve(response.data.records);
-            }).catch((response) => {
-                reject(`${response.data?.message}\n${response.data?.status}`);
-            });
+            }).catch(response => {
+                reject(`Could not load employees: ${response?.data?.message ?? response?.response?.data?.message}`);
+            })
+        }).catch(err => {
+            error = err;
         });
-        // View based request, gets max of 1_000 employees
-        ////// needs session key
-        // axios.get('https://api.knack.com/v1/pages/scene_1/views/view_150/records?page=1&rows_per_page=1000').then(() => {
-
-        // });
-    },
-
-    async getAllEmployeeIds() {
-        const employees = await this.getAllEmployees();
-
-        if (!Array.isArray(employees)) {
-            alert(employees);
+        
+        if (error || !Array.isArray(employees)) {
+            alert(error ?? 'Could not load employees. Please try refreshing the page for employee connecting data.');
+            return {};
         }
 
         const employeeMap = new Proxy({}, {
@@ -80,16 +75,20 @@ const API = {
     },
 
     async getAllTvResponseProductOffers() {
+        let error = null;
         const tvResponses = await new Promise((resolve, reject) => {
             axios.get(`/.netlify/functions/get-records?type=tvResponses&knackAppId=${knackAppId}`).then((response) => {
                 resolve(response.data.records);
-            }).catch((response) => {
-                reject(`${response.data?.message}\n${response.data?.status}`);
-            });
+            }).catch(response => {
+                reject(`Could not load TV Response data: ${response.data?.message ?? response?.response?.data?.message}`);
+            })
+        }).catch(err => {
+            error = err;
         });
 
-        if (!Array.isArray(tvResponses)) {
-            alert('Current TV Responses did not load. Please load the page again if planning to upload a TV Response report.');
+        if (error || !Array.isArray(tvResponses)) {
+            alert(error ?? `Could not load TV Response data.\nPlease load the page again if planning to upload a TV Response report.`);
+            return [];
         }
 
         let programNameMap = {}, productOfferMap = {};
