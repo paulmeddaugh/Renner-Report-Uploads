@@ -1,6 +1,6 @@
 // Docs on event and context https://docs.netlify.com/functions/build/#code-your-function-2
 
-const basicHeaders = { 
+const basicReturnHeaders = { 
   'Access-Control-Allow-Origin': 'https://renner.knack.com', 
   'Access-Control-Allow-Headers': 'Content-Type, Accept, Origin', 
   'Access-Control-Allow-Methods': 'POST, OPTIONS'
@@ -18,7 +18,7 @@ const handler = async (event) => {
     }
 
     if (event.httpMethod === 'OPTIONS') {
-      return { statusCode: 200, headers: basicHeaders };
+      return { statusCode: 200, headers: basicReturnHeaders };
     }
 
     let code, client_id;
@@ -27,7 +27,7 @@ const handler = async (event) => {
         ({ code, client_id } = JSON.parse(event.body));
         console.log('client_id', client_id);
     } catch (error) {
-        return { statusCode: 400, body: { message: "No code or client id found." }, headers: { ...basicHeaders, 'Content-Type': 'application/json'} }
+        return { statusCode: 400, body: { message: "No code or client id found." }, headers: { ...basicReturnHeaders, 'Content-Type': 'application/json'} }
     }
     
     const headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' };
@@ -42,10 +42,10 @@ const handler = async (event) => {
       const response = await fetch('https://app.bombbomb.com/auth/access_token', { method: 'POST', body: JSON.stringify(postData), headers });
       const text = await response.text();
 
-      return { statusCode: 200, body: text, headers: { ...basicHeaders, 'Content-Type': 'application/json' } };
+      return { statusCode: 200, body: text, headers: { ...basicReturnHeaders, 'Content-Type': 'application/json' } };
 
     } catch (error) {
-      return { statusCode: 500, body: error.toString(), headers: { ...basicHeaders, 'Content-Type': 'text/plain' } };
+      return { statusCode: 500, body: error.toString(), headers: { ...basicReturnHeaders, 'Content-Type': 'text/plain' } };
     }
 }
 

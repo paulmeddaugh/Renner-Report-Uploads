@@ -1,17 +1,14 @@
 // Docs on event and context https://docs.netlify.com/functions/build/#code-your-function-2
 
-const knackConfig = {
-  apiId: process.env.KID,
-  apiKey: process.env.KKEY,
-}
+const basicReturnHeaders = { 
+  'Access-Control-Allow-Origin': 'https://renner.knack.com', 
+  'Access-Control-Allow-Headers': 'Content-Type, Accept, Origin', 
+  'Access-Control-Allow-Methods': 'POST, OPTIONS'
+};
 
-const basicHeaders = {
-  'X-Knack-Application-Id': knackConfig.apiId,
-  'X-Knack-REST-API-Key': knackConfig.apiKey,
-}
-
-const headers = {
-  ...basicHeaders,
+const knackHeaders = {
+  'X-Knack-Application-Id': process.env.KID,
+  'X-Knack-REST-API-Key': process.env.KKEY,
   'Content-Type': 'application/json'
 }
 
@@ -19,7 +16,7 @@ const headers = {
 // 'type' param with options of 'CallStatistic', 'NoteStatistic', 'TotalInteractionStatistic', and 'TVResponse'
 const handler = async (event) => {
 
-  if (event.httpMethod !== 'POST') {
+  if (event.httpMethod !== 'POST' && event.httpMethod !== 'OPTIONS') {
     return {
         statusCode: 501,
         body: JSON.stringify({ message: "Not Implemented" }),
@@ -27,10 +24,13 @@ const handler = async (event) => {
     }
   }
 
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 200, headers: basicReturnHeaders };
+  }
+
   let newRecord = null, type = null, url;
 
   try {
-    console.log('running', 0);
     ({ body: newRecord } = event);
     ({ type } = event.queryStringParameters);
 
@@ -43,27 +43,23 @@ const handler = async (event) => {
       'BombbombStatistic': 'https://api.knack.com/v1/objects/object_37/records',
     })[type] ?? '';
 
-    console.log('running', 1);
   } catch (error) {
-    return { statusCode: 400, body: error.toString() }
+    return { statusCode: 400, body: error.toString(), headers: basicReturnHeaders };
   }
 
   try {
-    console.log('running', 2);
 
     let knackResponse;
-    await fetch(url, { method: 'POST', headers, body: newRecord }).then(async response => {
+    await fetch(url, { method: 'POST', headers: knackHeaders, body: newRecord }).then(async response => {
       knackResponse = await response?.text();
-      console.log('running', 3);
     });
 
-    return { statusCode: 200, body: knackResponse };
+    return { statusCode: 200, body: knackResponse, headers: basicReturnHeaders };
   } catch (response) {
-    console.log('running', 4, newRecord);
+    console.log(newRecord);
     console.log(response);
-    console.log('running', 5);
 
-    return { statusCode: 500, body: response.toString() }
+    return { statusCode: 500, body: response.toString(), headers: basicReturnHeaders }
   }
 }
 
